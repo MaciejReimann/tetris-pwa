@@ -1,0 +1,18 @@
+{
+  "name": "tetris_api",
+  "version": "1.0.0",
+  "description": "Tetris Game Engine",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --watch",
+    "start": "node server.js"
+  },
+  "author": "Maciej Reimann",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^23.6.0"
+  },
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
