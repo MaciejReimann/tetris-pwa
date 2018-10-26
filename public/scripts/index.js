@@ -1,10 +1,9 @@
 
-const TetrisGame = require('./TetrisGame');
 
-const tetris = new TetrisGame(10, 6)
+const tetris = require('./Tetris');
 
-console.log(
-    tetris.getHeight()
-)
 
-module.exports = Game;
+tetris.setUp(10, 20, 1);
+
+console.log(tetris.getState())
+
