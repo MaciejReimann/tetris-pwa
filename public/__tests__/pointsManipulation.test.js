@@ -1,5 +1,6 @@
 const { 
     merge,
+    createPoint,
 } = require('../scripts/helpers/pointsManipulation');
 
 const obj1 = {
@@ -35,3 +36,4 @@ test("Merge updating a property", () => {
     }
     expect(merge(obj1, obj2)).toEqual(output)
 })
+
