@@ -35,24 +35,34 @@ test("Game status after start", () => {
     expect(tetris.getState().gameStarted).toBeTruthy()
 })
 
-// moveDown()
+Array(height).fill().map((_, i) => 
+    test("Pivot moved from start height-1 times", () => {
+        tetris.start();
+        const movedPivot = {x: width / 2, y: i};
+        expect(tetris.moveDown(1).pivot).toEqual(movedPivot)
+        expect(tetris.getState().board.startPivot).toEqual(startPivot)
+        expect(tetris.getStatus()).toEqual("Moved down")
+    })
+)
+test("Pivot moved height times should give start point", () => {  
+    tetris.start();  
+    expect(tetris.moveDown(height).pivot).toEqual(startPivot)
+    expect(tetris.getStatus()).toEqual("Moved down")
+})
+test("Pivot moved height times + 1 should give one down from start point", () => {
+    const oneDown = {x: width / 2, y: 1};
+    tetris.start();
+    tetris.moveDown(height-1)    
+    tetris.moveDown(1)    
+    tetris.moveDown(1)
+    expect(tetris.getState().pivot).toEqual(oneDown)
+    expect(tetris.getStatus()).toEqual("Moved down")
+})
 
-test("Pivot moved from start", () => {
-    tetris.moveDown()
-    const movedPivot = {x: width / 2, y: 0};
-    expect(tetris.getState().pivot).toEqual(movedPivot)
-    expect(tetris.getState().board.startPivot).toEqual(startPivot)
-})
-test("Pivot moved 2nd time", () => {
-    tetris.moveDown()
-    const movedPivot = {x: width / 2, y: 1};
-    expect(tetris.getState().pivot).toEqual(movedPivot)
-    expect(tetris.getState().board.startPivot).toEqual(startPivot)
-})
-test("Pivot moved 4th time", () => {
-    tetris.moveDown()
-    tetris.moveDown()
-    const movedPivot = {x: width / 2, y: 3};
-    expect(tetris.getState().pivot).toEqual(movedPivot)
-    expect(tetris.getState().board.startPivot).toEqual(startPivot)
-})
+
+// test("Pivot moved N height times should give N down from start point", () => {
+//     const twoDown = {x: width / 2, y: 2};
+//     tetris.moveDown(height)
+//     tetris.moveDown(height)
+//     expect(tetris.getState().pivot).toEqual(twoDown)
+// })
