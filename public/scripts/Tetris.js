@@ -7,21 +7,25 @@
 const Point = require('./helpers/Point');
 
 // Tetris object to be exported
-const state = {};
-state.board = {};
+
+let board = {};
+
+let state = {};
+
 let status = '';
 
 
 // PRIVATE METHODS
 
-const isOnStart = position => position.y === state.board.startPivot.y;
+const isOnStart = position => position.y === board.startPoint.y;
+
 
 // Check if moved doesn't hit other squares on the board;
-const hitsSquares = () => false;
+const hitsSquaresOnDown = () => false;
 // Check if moved doesn't get outside the board;
-const hitsBottom = (position, n) => position.y + n >= state.board.height;
+const hitsBottom = (position, n) => position.y + n >= board.height;
 // Check if can be moved down;
-const canMoveDown = (position, n) => !hitsBottom(state.pivot, n) && !hitsSquares();
+const canMoveDown = (position, n) => !hitsBottom(state.pivot, n) && !hitsSquaresOnDown();
 
 const whenMovedDown = (position, n) => {
     return {
@@ -30,41 +34,39 @@ const whenMovedDown = (position, n) => {
     }
 }
 
-const getStartPosition = () => state.board.startPivot
+const getStartPosition = () => board.startPoint;
 const getNextPosition = (position, n) => canMoveDown(position, n)
     ? whenMovedDown(position, n)
     : getStartPosition()
 
-
-
-
-
 // PUBLIC METHODS
-const getState = () => {
-    return state;
-}
-const getStatus = () => {
-    return status;
-}
+const getBoard = () => board;
+const getState = () => state;
+const getStatus = () => status;
 
 const setUp = (width, height, tempo) => {
-    state.board.width = width;
-    state.board.height = height;
-    state.board.tempo = tempo;
-    state.board.startPivot = new Point(width / 2, 0)
+    board = {
+        width,
+        height,
+        tempo,
+        startPoint: {x: width / 2, y: 0}
+    }
     return state;
 }
 
 const start = () => {
     status = "Game started";
-    state.gameStarted = true;
-    state.gameIsOver = false;
+    state = {
+        gameStarted: true,
+        gameIsOver: false,
+        squares: []
+    }
     return state;
 }
 
 const pause = () => {
     status = "Game started";
-    state.gameStarted = true;
+    state.gamePaused = true;
 
     return state;
 }
@@ -83,6 +85,10 @@ const moveDown = (n) => {
     state.pivot = state.pivot
         ? getNextPosition(state.pivot, n)
         : getStartPosition()
+    
+    state.squares = !canMoveDown(state.pivot, n)
+        ? state.squares.concat(state.pivot)
+        : state.squares
 
     state.gameIsOver = !canMoveDown(state.pivot, n) && isOnStart(state.pivot)
     
@@ -100,6 +106,7 @@ const moveLeft = () => {
 }
 
 module.exports = {
+    getBoard,
     getState,
     getStatus,
 
