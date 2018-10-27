@@ -5,7 +5,7 @@ const tetris = require('../scripts/Tetris');
 // Board setup constants
 const width = 10;
 const height = 20;
-const tempo = 1;
+const tempo = 1000;
 const startPoint = {x: width / 2, y: 0};
 
 // getState() and setUp()
@@ -81,7 +81,6 @@ test("Game over", () => {
         if (tetris.getStatus() === "Game over") {
             expect(tetris.getState().squares.length).toBe(height)
             expect(moveCounter + 1).toBe(endCounter)
-            console.log(moveCounter)
             break //209
         }
         moveCounter ++;
@@ -102,5 +101,17 @@ test("Game over one move after board is full", () => {
         moveCounter ++;
     } while (moveCounter < height * max)
 })
+
+let timer = 0;
+const movedPivot = {x: width / 2, y: timer};
+setInterval( 
+    () => test("Timeout", () => {
+        tetris.start();
+        timer ++
+        if(timer === 3){ console.log("3 secs")}
+        expect(tetris.getState().pivot).toEqual(movedPivot)
+    }),
+    tempo 
+)
 
 

@@ -64,6 +64,8 @@ const start = () => {
         pivot: board.startPoint,
         squares: []
     }
+    setInterval(moveDown, board.tempo)
+
     return state;
 }
 
