@@ -17,15 +17,20 @@ let status = '';
 
 // PRIVATE METHODS
 
+const arePointsEqual = (p1, p2) => p1.x === p2.x && p1.y === p2.y;
+
 const isOnStart = position => position.y === board.startPoint.y;
 
-
 // Check if moved doesn't hit other squares on the board;
-const hitsSquaresOnDown = () => false;
+const hitsOthers = (position, n, others) => others.some(square => 
+    arePointsEqual(square, {x: position.x, y: position.y + n})
+);
+
 // Check if moved doesn't get outside the board;
 const hitsBottom = (position, n) => position.y + n >= board.height;
 // Check if can be moved down;
-const canMoveDown = (position, n) => !hitsBottom(position, n) && !hitsSquaresOnDown();
+const canMoveDown = (position, n, others) => 
+    !hitsBottom(position, n) && !hitsOthers(position, n, others);
 
 const getStartPosition = () => board.startPoint;
 
@@ -35,11 +40,6 @@ const getNextPosition = (position, n) => {
         y: position.y + n
     }
 }
-
-
-// const getNextPosition = (position, n) => canMoveDown(position, n)
-//     ? whenMovedDown(position, n)
-//     : getStartPosition()
 
 // PUBLIC METHODS
 const getBoard = () => board;
@@ -85,15 +85,16 @@ const moveDown = (n) => {
         status = "Moved down";    
     }    
 
-    state.pivot = canMoveDown(state.pivot, n)
-        ? getNextPosition(state.pivot, n)
-        : getStartPosition()
+    state.pivot = !canMoveDown(state.pivot, n, state.squares)
+        ? getStartPosition() 
+        : getNextPosition(state.pivot, n)
     
-    state.squares = !canMoveDown(state.pivot, n)
+    state.squares = !canMoveDown(state.pivot, n, state.squares)
         ? state.squares.concat(state.pivot)
         : state.squares
 
-    state.gameIsOver = !canMoveDown(state.pivot, n) && isOnStart(state.pivot)
+    state.gameIsOver = !canMoveDown(state.pivot, n, state.squares) 
+        && isOnStart(state.pivot)
     
     return state;
 }
@@ -114,6 +115,7 @@ module.exports = {
     getStatus,
 
     state,
+    hitsOthers,
 
     setUp,
     start,

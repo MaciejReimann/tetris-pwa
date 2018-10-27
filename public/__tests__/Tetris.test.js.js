@@ -69,9 +69,38 @@ test("Pivot moved from start n-height times, squares.length increments at height
     } while (moveCounter < height * max)
 })
 
-// test("Pivot moved N height times should give N down from start point", () => {
-//     const twoDown = {x: width / 2, y: 2};
-//     tetris.moveDown(height)
-//     tetris.moveDown(height)
-//     expect(tetris.getState().pivot).toEqual(twoDown)
-// })
+const sumArProgression = (n, a1, an) => n * (a1 + an) / 2;
+
+test("Game over", () => {
+    const endCounter = sumArProgression(height + 1, height, 0)
+    let max = 100;
+    let moveCounter = 0;
+    tetris.start();
+    do {
+        tetris.moveDown(1);
+        if (tetris.getStatus() === "Game over") {
+            expect(tetris.getState().squares.length).toBe(height)
+            expect(moveCounter + 1).toBe(endCounter)
+            console.log(moveCounter)
+            break //209
+        }
+        moveCounter ++;
+    } while (moveCounter < height * max)
+})
+
+test("Game over one move after board is full", () => {
+    let max = 100;
+    let moveCounter = 0;
+    tetris.start();
+    do {
+        tetris.moveDown(1);
+        if(tetris.getState().squares.length === height) {
+            tetris.moveDown(1);
+            expect(tetris.getStatus()).toEqual("Game over")
+            break
+        }
+        moveCounter ++;
+    } while (moveCounter < height * max)
+})
+
+
