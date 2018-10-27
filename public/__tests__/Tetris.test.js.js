@@ -51,20 +51,22 @@ test("Pivot moved from start n times", () => {
     } while (moveCounter < height)
 })
 
-test("Pivot moved from start n-height times, squares.length = n -1", () => {
-    let n = 2
+test("Pivot moved from start n-height times, squares.length increments at height -1", () => {
+    let max = 20
+    let nCounter = 1
     let moveCounter = 1;
     tetris.start();
     do {
         let squaresCounterBeforeMove = tetris.getState().squares.length;
         tetris.moveDown(1);
         let squaresCounterAfterMove = tetris.getState().squares.length;
-        if(tetris.getState().pivot.y === height - 1) {
-            // console.log(tetris.getState())
+        if(tetris.getState().pivot.y === height - 1) {            
             expect(squaresCounterAfterMove - squaresCounterBeforeMove).toBe(1)
+            expect(squaresCounterAfterMove).toBe(nCounter)
+            nCounter++
         }
         moveCounter ++;   
-    } while (moveCounter < height * n)
+    } while (moveCounter < height * max)
 })
 
 // test("Pivot moved N height times should give N down from start point", () => {
