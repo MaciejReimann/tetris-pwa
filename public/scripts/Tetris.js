@@ -25,19 +25,21 @@ const hitsSquaresOnDown = () => false;
 // Check if moved doesn't get outside the board;
 const hitsBottom = (position, n) => position.y + n >= board.height;
 // Check if can be moved down;
-const canMoveDown = (position, n) => !hitsBottom(state.pivot, n) && !hitsSquaresOnDown();
+const canMoveDown = (position, n) => !hitsBottom(position, n) && !hitsSquaresOnDown();
 
-const whenMovedDown = (position, n) => {
+const getStartPosition = () => board.startPoint;
+
+const getNextPosition = (position, n) => {
     return {
         x: position.x, 
         y: position.y + n
     }
 }
 
-const getStartPosition = () => board.startPoint;
-const getNextPosition = (position, n) => canMoveDown(position, n)
-    ? whenMovedDown(position, n)
-    : getStartPosition()
+
+// const getNextPosition = (position, n) => canMoveDown(position, n)
+//     ? whenMovedDown(position, n)
+//     : getStartPosition()
 
 // PUBLIC METHODS
 const getBoard = () => board;
@@ -59,6 +61,7 @@ const start = () => {
     state = {
         gameStarted: true,
         gameIsOver: false,
+        pivot: board.startPoint,
         squares: []
     }
     return state;
@@ -82,7 +85,7 @@ const moveDown = (n) => {
         status = "Moved down";    
     }    
 
-    state.pivot = state.pivot
+    state.pivot = canMoveDown(state.pivot, n)
         ? getNextPosition(state.pivot, n)
         : getStartPosition()
     
