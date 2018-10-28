@@ -48,8 +48,10 @@ function willHitBottom(movedPoint) {
 // Check if if a point after move doesn't hit other points;
 function willHitOthers(movedPoint, otherPoints) {
     return (
-        otherPoints.some(point => arePointsEqual(movedPoint, point))
-    )        
+        otherPoints.some(point => {
+            return arePointsEqual(movePointDownOneStep(movedPoint), point)
+        })
+    );   
 };
 
 // Check if the pivot after move neither
@@ -61,8 +63,6 @@ function canMoveDownNow() {
     );
 };
 
-
-
 // PUBLIC METHODS
 function getBoard() {
     return board
@@ -73,7 +73,10 @@ function getState() {
 };
 
 function start() {
-    state.gameStarted = true;    
+    state.gameStarted = true;
+    // while (!state.gameIsOver) {
+
+    // };
     // setInterval(() => moveDown(1), board.tempo)
 };
 
@@ -87,14 +90,13 @@ function restore() {
     // setInterval again
 };
 
-function nextStep() {
+function nextStep() {    
     if( canMoveDownNow() ) {
-        state.pivotLocation = movePointDownOneStep(state.pivotLocation);
-        state.gameIsOver = false;
+        state.pivotLocation = movePointDownOneStep(state.pivotLocation);        
     } else {
         state.stackedSquares = state.stackedSquares.concat(state.pivotLocation);
         state.pivotLocation = board.startPoint;
-        state.gameIsOver = true;
+        state.gameIsOver =  !canMoveDownNow() ? true : false;
     };
 };
 

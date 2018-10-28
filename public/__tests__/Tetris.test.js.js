@@ -4,7 +4,7 @@ const tetris = require('../scripts/Tetris');
 // Board default setup constants
 const defaultBoard = {
     width: 6,
-    height: 6,
+    height: 10,
     tempo: 1000,
     step: 1,
     startPoint: {x: 3, y: 0}
@@ -98,23 +98,29 @@ test("Pivot starts back from 0, stackedSquares increment by one", () => {
     };
 });
 
-// const sumArProgression = (n, a1, an) => n * (a1 + an) / 2;
 
-// test("Game over", () => {
-//     const endCounter = sumArProgression(height + 1, height, 0)
-//     let max = 100;
-//     let moveCounter = 0;
-//     tetris.start();
-//     do {
-//         tetris.moveDown(1);
-//         if (tetris.getStatus() === "Game over") {
-//             expect(tetris.getState().squares.length).toBe(height)
-//             expect(moveCounter + 1).toBe(endCounter)
-//             break //209
-//         }
-//         moveCounter ++;
-//     } while (moveCounter < height * max)
-// })
+
+
+test("Game over when next-step-counter + 1 reach the sum of arithmetic progression", () => {
+    const { width, height, tempo, step, startPoint } = defaultBoard;
+    const sumArProgression = (n, a1, an) => n * (a1 + an) / 2;
+    const endCounter = sumArProgression(height + 1, height, 0);
+    let moveCounter = 1;
+
+    tetris.init(width, height, tempo, step);
+    tetris.start();
+
+    while (moveCounter < height * height) {
+        tetris.nextStep();
+
+        if (tetris.getState().gameIsOver) {        
+            expect(tetris.getState().stackedSquares.length).toBe(height - 1);
+            expect(moveCounter + 1).toBe(endCounter);
+            break;
+        };
+        moveCounter ++;
+    };
+});
 
 // test("Game over one move after board is full", () => {
 //     let max = 100;
