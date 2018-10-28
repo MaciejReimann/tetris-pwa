@@ -8,29 +8,30 @@ const Point = require('./helpers/Point');
 
 // Tetris object to be exported
 
-let board = {};
-
-let state = {};
-
-let status = '';
+const  board = {};
+const state = {};
+const status = '';
 
 
 // PRIVATE METHODS
-
+// funcion definnition
 const arePointsEqual = (p1, p2) => p1.x === p2.x && p1.y === p2.y;
 
 const isOnStart = position => position.y === board.startPoint.y;
 
 // Check if moved doesn't hit other squares on the board;
-const hitsOthers = (position, n, others) => others.some(square => 
+let hitsOthers = (position, n, others) => others.some(square => 
     arePointsEqual(square, {x: position.x, y: position.y + n})
 );
+
+
 
 // Check if moved doesn't get outside the board;
 const hitsBottom = (position, n) => position.y + n >= board.height;
 // Check if can be moved down;
-const canMoveDown = (position, n, others) => 
-    !hitsBottom(position, n) && !hitsOthers(position, n, others);
+const canMoveDown = (position, n, others) => {
+    return !hitsBottom(position, n) && !hitsOthers(position, n, others);
+}
 
 const getStartPosition = () => board.startPoint;
 
@@ -56,6 +57,7 @@ const setUp = (width, height, tempo) => {
     return state;
 }
 
+// rozbić start na init (ustawienie planszy) i start - wystartowanie gry.
 const start = () => {
     status = "Game started";
     state = {
@@ -64,10 +66,13 @@ const start = () => {
         pivot: board.startPoint,
         squares: []
     }
-    setInterval(moveDown, board.tempo)
+    
+    setInterval(() => nextPositon(1), board.tempo);
 
     return state;
 }
+
+
 
 const pause = () => {
     status = "Game started";
@@ -78,27 +83,16 @@ const pause = () => {
 
 
 
-const moveDown = (n) => {
-    
-    if (state.gameIsOver) {
-        status = "Game over"
-        return state;
+const nextPositon = (n) => {
+    if(!canMoveDown(state.pivot, n, state.squares)) {
+        state.pivot = getNextPosition(state.pivot, n);
+
+        state.square = state.square.concat(state.pivot);
+        state.gameIsOver = false;
     } else {
-        status = "Moved down";    
-    }    
-
-    state.pivot = !canMoveDown(state.pivot, n, state.squares)
-        ? getStartPosition() 
-        : getNextPosition(state.pivot, n)
-    
-    state.squares = !canMoveDown(state.pivot, n, state.squares)
-        ? state.squares.concat(state.pivot)
-        : state.squares
-
-    state.gameIsOver = !canMoveDown(state.pivot, n, state.squares) 
-        && isOnStart(state.pivot)
-    
-    return state;
+        start.gameIsOver = true;
+        state.pivot = getStartPosition();
+    }
 }
 
 const moveRight = () => {
@@ -122,7 +116,7 @@ module.exports = {
     setUp,
     start,
     pause,
-    moveDown,
+    nextPositon,
     moveRight,
     moveLeft
 };

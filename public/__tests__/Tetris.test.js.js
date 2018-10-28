@@ -9,17 +9,22 @@ const tempo = 1000;
 const startPoint = {x: width / 2, y: 0};
 
 // getState() and setUp()
-tetris.setUp(width, height, tempo);
+beforeEach(_ => {
+        tetris.setUp(width, height, tempo);
+})
 
 test("Width setup", () => {    
     expect(tetris.getBoard().width).toBe(width)
 })
+
 test("Height setup", () => {    
     expect(tetris.getBoard().height).toBe(height)
 })
+
 test("Tempo setup", () => {    
     expect(tetris.getBoard().tempo).toBe(tempo)
 })
+
 test("Startpoint setup", () => {    
     expect(tetris.getBoard().startPoint).toEqual(startPoint)
 })
@@ -55,8 +60,8 @@ test("Pivot moved from start n-height times, squares.length increments at height
     let max = 20
     let nCounter = 1
     let moveCounter = 1;
-    tetris.start();
-    do {
+    
+    while (moveCounter < height * max) {
         let squaresCounterBeforeMove = tetris.getState().squares.length;
         tetris.moveDown(1);
         let squaresCounterAfterMove = tetris.getState().squares.length;
@@ -66,17 +71,17 @@ test("Pivot moved from start n-height times, squares.length increments at height
             nCounter++
         }
         moveCounter ++;   
-    } while (moveCounter < height * max)
+    } 
 })
 
-const sumArProgression = (n, a1, an) => n * (a1 + an) / 2;
+
 
 test("Game over", () => {
+    const sumArProgression = (n, a1, an) => n * (a1 + an) / 2;
     const endCounter = sumArProgression(height + 1, height, 0)
-    let max = 100;
     let moveCounter = 0;
     tetris.start();
-    do {
+    while (true) {
         tetris.moveDown(1);
         if (tetris.getStatus() === "Game over") {
             expect(tetris.getState().squares.length).toBe(height)
@@ -84,7 +89,7 @@ test("Game over", () => {
             break //209
         }
         moveCounter ++;
-    } while (moveCounter < height * max)
+    } 
 })
 
 test("Game over one move after board is full", () => {
@@ -102,16 +107,18 @@ test("Game over one move after board is full", () => {
     } while (moveCounter < height * max)
 })
 
-let timer = 0;
-const movedPivot = {x: width / 2, y: timer};
-setInterval( 
-    () => test("Timeout", () => {
-        tetris.start();
-        timer ++
-        if(timer === 3){ console.log("3 secs")}
-        expect(tetris.getState().pivot).toEqual(movedPivot)
-    }),
-    tempo 
-)
+test('test game self ending', () => {
+    tetris.start();
+    let timer = 0;
+    const tempo = 3000;
 
+    const movedPivot = {x: width / 2, y: timer};
 
+    setInterval( 
+        () => {
+            timer ++;
+            console.log(`timer is ${timer}`);
+        },
+        tempo
+    );
+});
