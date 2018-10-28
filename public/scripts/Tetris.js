@@ -21,8 +21,9 @@ function init(width, height, tempo, step) {
     state = {
         gameStarted: false,
         gameIsOver: false,
-        pivot: board.startPoint,
-        squares: []
+        pivotLocation: board.startPoint,
+        tetrisSquares: [],
+        stackedSquares: []
     };
 };
 
@@ -41,7 +42,7 @@ function movePointDownOneStep(point) {
 
 // Check if a point after move doesn't get outside the board;
 function willHitBottom(movedPoint) {
-    return movePointDownOneStep(movedPoint) >= board.height;
+    return movePointDownOneStep(movedPoint).y >= board.height;
 };
 
 // Check if if a point after move doesn't hit other points;
@@ -51,14 +52,15 @@ function willHitOthers(movedPoint, otherPoints) {
     )        
 };
 
-// Check if a point after move neither
-// get outside the board or hit other points;
-function canMoveDown(movedPoint, otherPoints) {
+// Check if the pivot after move neither
+// get outside the board or hit stacked squares;
+function canMoveDownNow() {
     return (
-        !willHitBottom(movedPoint) && 
-        !willHitOthers(movedPoint, otherPoints)
-    );    
-};    
+        !willHitBottom(state.pivotLocation) && 
+        !willHitOthers(state.pivotLocation, state.stackedSquares)
+    );
+};
+
 
 
 // PUBLIC METHODS
@@ -86,15 +88,15 @@ function restore() {
 };
 
 function nextStep() {
-    if(canMoveDown(state.pivot, state.squares)) {
-        state.pivot = movePointDownOneStep(state.pivot);
+    if( canMoveDownNow() ) {
+        state.pivotLocation = movePointDownOneStep(state.pivotLocation);
         state.gameIsOver = false;
     } else {
-        state.squares.concat(state.pivot);
-        state.pivot = board.startPoint;
+        state.stackedSquares = state.stackedSquares.concat(state.pivotLocation);
+        state.pivotLocation = board.startPoint;
         state.gameIsOver = true;
-    }
-}
+    };
+};
 
 function moveRight() {
 

@@ -3,12 +3,13 @@ const tetris = require('../scripts/Tetris');
 
 // Board default setup constants
 const defaultBoard = {
-    width: 10,
-    height: 20,
+    width: 6,
+    height: 6,
     tempo: 1000,
     step: 1,
-    startPoint: {x: 5, y: 0}
+    startPoint: {x: 3, y: 0}
 };
+
 
 describe("Initial state for default setup", () => {
     const { width, height, tempo, step, startPoint } = defaultBoard;    
@@ -44,46 +45,58 @@ describe("Starting game", () => {
     });
 })
 
-describe("Pivot positiion after next step", () => {
+describe("Pivot position after next step", () => {
     const { width, height, tempo, step, startPoint } = defaultBoard;
-    tetris.start();
-
-    test("Pivot in the start point ", () => {
-        expect(tetris.getState().pivot).toEqual(startPoint);
-    })
-    test("Pivot moved n times from start drops down by n * step", () => {
+    beforeEach(() => {        
+        tetris.init(width, height, tempo, step);
         tetris.start();
-        let moveCounter = 1;  
-
-        while (moveCounter < height) {        
+    });
+    
+    test("Pivot in the start point ", () => {
+        expect(tetris.getState().pivotLocation).toEqual(startPoint);
+    })
+    test("Pivot moved down n-times from start moves down by n * step", () => {  
+        tetris.start();      
+        let moveCounter = 1;
+        while (moveCounter <= height - 1) {
             const movedPivot = {x: width / 2, y: moveCounter * step};
-            tetris.nextStep(step);
-            expect(tetris.getState().pivot).toEqual(movedPivot);            
-            moveCounter ++;   
+            tetris.nextStep();
+            expect(tetris.getState().pivotLocation).toEqual(movedPivot);
+            moveCounter ++;
+        };
+    });   
+    test("Pivot back to start point when moved down height times", () => {
+        let moveCounter = 1;
+        while (moveCounter <= height) {
+            tetris.nextStep();
+            if(moveCounter === height) {                
+                expect(tetris.getState().pivotLocation).toEqual(startPoint);
+            };
+            moveCounter ++;
         };
     });
 });
 
+test("Pivot starts back from 0, stackedSquares increment by one", () => {
+    const { width, height, tempo, step, startPoint } = defaultBoard;
+    let stackCounter = 1;
+    let moveCounter = 1;
 
-// test("Pivot moved from start n-height times, squares.length increments at height", () => {
-//     let max = 20
-//     let nCounter = 1
-//     let moveCounter = 1;
-//     tetris.start();
-//     while (moveCounter < height * max) {
-//         let squaresCounterBeforeMove = tetris.getState().squares.length;
-//         tetris.moveDown(1);
-//         let squaresCounterAfterMove = tetris.getState().squares.length;
-//         if(tetris.getState().pivot.y === height) {            
-//             expect(squaresCounterAfterMove - squaresCounterBeforeMove).toBe(1)
-//             expect(squaresCounterAfterMove).toBe(nCounter)
-//             nCounter ++
-//         }
-//         moveCounter ++;
-        
-//     }
-//     console.log(nCounter) 
-// })
+    beforeEach(() => {        
+        tetris.init(width, height, tempo, step);
+        tetris.start();
+    });
+
+    while (moveCounter < height * height) {
+        tetris.nextStep(step);
+
+        if (tetris.getState().pivotLocation.y === 0) {
+            stackCounter ++;
+            expect(tetris.getState().stackedSquares.length).toEqual(stackCounter);            
+        };
+        moveCounter ++;
+    };
+});
 
 // const sumArProgression = (n, a1, an) => n * (a1 + an) / 2;
 
