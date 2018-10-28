@@ -2,13 +2,14 @@
 
 const { 
     createPoint,
+    arePointsEqual
 } = require('./helpers/pointsHelpers');
 
 // Create empty object to store the data in;
 let board = {};
 let state = {};
 
-// Initialize board with given board parameters and initial game state;
+// Fill board with given parameters and fill state with initial state;
 function init(width, height, tempo, step) {
     board = {
         width,
@@ -27,82 +28,90 @@ function init(width, height, tempo, step) {
 
 // PRIVATE METHODS
 function movePoint(point, x, y) {
-    return createPoint(point.x + x, point.y + y)
-}
+    return createPoint(point.x + x, point.y + y);
+};
 
 function movePointDown(point, y) {
-    return movePoint(point, 0, y)
-}
+    return movePoint(point, 0, y);
+};
 
- 
+function movePointDownOneStep(point) {
+    return movePointDown(point, board.step);
+};
 
-const arePointsEqual = (p1, p2) => p1.x === p2.x && p1.y === p2.y;
+// Check if a point after move doesn't get outside the board;
+function willHitBottom(movedPoint) {
+    return movePointDownOneStep(movedPoint) >= board.height;
+};
 
-const isOnStart = position => position.y === board.startPoint.y;
+// Check if if a point after move doesn't hit other points;
+function willHitOthers(movedPoint, otherPoints) {
+    return (
+        otherPoints.some(point => arePointsEqual(movedPoint, point))
+    )        
+};
 
-// Check if moved doesn't hit other squares on the board;
-const hitsOthers = (position, n, others) => others.some(square =>
-    arePointsEqual(square, {x: position.x, y: position.y + n})
-);
+// Check if a point after move neither
+// get outside the board or hit other points;
+function canMoveDown(movedPoint, otherPoints) {
+    return (
+        !willHitBottom(movedPoint) && 
+        !willHitOthers(movedPoint, otherPoints)
+    );    
+};    
 
-// Check if moved point doesn't get outside the board;
-const hitsBottom = (position, n) => position.y + n >= board.height;
-// Check if can be moved down;
-const canMoveDown = (position, n, others) => 
-    !hitsBottom(position, n) && !hitsOthers(position, n, others);
-
-const getStartPosition = () => board.startPoint;
-
-const getNextPosition = (position, n) => {
-    return {
-        x: position.x, 
-        y: position.y + n
-    }
-}
 
 // PUBLIC METHODS
-const getBoard = () => board;
-const getState = () => state;
+function getBoard() {
+    return board
+};
 
-const start = () => {
+function getState() {
+    return state
+};
+
+function start() {
     state.gameStarted = true;    
     // setInterval(() => moveDown(1), board.tempo)
-}
+};
 
-const pause = () => {
+function pause() {
     state.gamePaused = true;
-}
+    // clearInterval
+};
 
-function moveDown(n) {
-    if(canMoveDown(state.pivot, n, state.squares)) {
-        status = "Moved down";
-        state.pivot = getNextPosition(state.pivot, n);
+function restore() {
+    state.gamePaused = false;
+    // setInterval again
+};
+
+function nextStep() {
+    if(canMoveDown(state.pivot, state.squares)) {
+        state.pivot = movePointDownOneStep(state.pivot);
         state.gameIsOver = false;
     } else {
-        state.squares.concat(state.pivot)
-        state.pivot = getStartPosition() 
+        state.squares.concat(state.pivot);
+        state.pivot = board.startPoint;
         state.gameIsOver = true;
     }
 }
 
-const moveRight = () => {
-    status = "Moved right";
-    return state;
+function moveRight() {
+
 }
 
-const moveLeft = () => {
-    status = "Moved right";
-    return state;
+function moveLeft() {
+
 }
 
 module.exports = {
     getBoard,
     getState,
-
     init,
     start,
     pause,
-    moveDown,
+    restore,
+    nextStep,
     moveRight,
     moveLeft
 };

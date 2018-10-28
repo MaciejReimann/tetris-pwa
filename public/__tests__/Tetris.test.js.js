@@ -33,37 +33,37 @@ describe("Initial state for default setup", () => {
     });
 })
 
+describe("Starting game", () => {
+    test("Game status before start", () => {
+        expect(tetris.getState().gameStarted).toBeFalsy();
+    });
+    test("Game status after start", () => {
+        tetris.start();
+        expect(tetris.getState().gameStarted).toBeTruthy();
+        expect(tetris.getState().gameIsOver).toBeFalsy();
+    });
+})
 
+describe("Pivot positiion after next step", () => {
+    const { width, height, tempo, step, startPoint } = defaultBoard;
+    tetris.start();
 
+    test("Pivot in the start point ", () => {
+        expect(tetris.getState().pivot).toEqual(startPoint);
+    })
+    test("Pivot moved n times from start drops down by n * step", () => {
+        tetris.start();
+        let moveCounter = 1;  
 
+        while (moveCounter < height) {        
+            const movedPivot = {x: width / 2, y: moveCounter * step};
+            tetris.nextStep(step);
+            expect(tetris.getState().pivot).toEqual(movedPivot);            
+            moveCounter ++;   
+        };
+    });
+});
 
-
-// start()
-// test("Game status before start", () => {
-//     expect(tetris.getState().gameStarted).toBeFalsy()
-// })
-// test("Game status after start", () => {
-//     tetris.start()  
-//     expect(tetris.getState().gameStarted).toBeTruthy()
-// })
-
-// moveDown()
-// test("Pivot moved from start n times", () => {
-//     let moveCounter = 0;
-//     tetris.start();
-//     do {        
-//         if(moveCounter === 0) {
-//             expect(tetris.getStatus()).toEqual("Game started");
-//             expect(tetris.getState().pivot).toEqual(startPoint);
-//         } else {
-//             const movedPivot = {x: width / 2, y: moveCounter};
-//             tetris.moveDown(1);
-//             expect(tetris.getStatus()).toEqual("Moved down");
-//             expect(tetris.getState().pivot).toEqual(movedPivot);            
-//         }        
-//         moveCounter ++;   
-//     } while (moveCounter < height)
-// })
 
 // test("Pivot moved from start n-height times, squares.length increments at height", () => {
 //     let max = 20
