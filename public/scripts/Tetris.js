@@ -77,7 +77,7 @@ function start() {
     // while (!state.gameIsOver) {
 
     // };
-    // setInterval(() => moveDown(1), board.tempo)
+    const ID = setInterval(() => nextStep(), board.tempo)
 };
 
 function pause() {

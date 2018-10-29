@@ -4,7 +4,7 @@ const tetris = require('../scripts/Tetris');
 // Board default setup constants
 const defaultBoard = {
     width: 6,
-    height: 10,
+    height: 6,
     tempo: 1000,
     step: 1,
     startPoint: {x: 3, y: 0}
@@ -35,13 +35,31 @@ describe("Initial state for default setup", () => {
 })
 
 describe("Starting game", () => {
+    const { width, height, tempo, step, startPoint } = defaultBoard;
+    beforeEach(() => {
+        tetris.init(width, height, tempo, step);
+    });
+    
     test("Game status before start", () => {
         expect(tetris.getState().gameStarted).toBeFalsy();
+        expect(tetris.getState().gameIsOver).toBeFalsy();
     });
     test("Game status after start", () => {
         tetris.start();
         expect(tetris.getState().gameStarted).toBeTruthy();
         expect(tetris.getState().gameIsOver).toBeFalsy();
+    });
+    test("Pivot location dropped down one step per second", () => {
+        jest.useFakeTimers();        
+        let timer = 0;
+        let moveCounter = 0;
+        tetris.start();
+        while (timer < height) {
+            const movedPivot = {x: width / 2, y: timer};
+            expect(tetris.getState().pivotLocation).toEqual(movedPivot);
+            jest.advanceTimersByTime(1000 * step);            
+            timer ++;
+        };
     });
 })
 
@@ -98,9 +116,6 @@ test("Pivot starts back from 0, stackedSquares increment by one", () => {
     };
 });
 
-
-
-
 test("Game over when next-step-counter + 1 reach the sum of arithmetic progression", () => {
     const { width, height, tempo, step, startPoint } = defaultBoard;
     const sumArProgression = (n, a1, an) => n * (a1 + an) / 2;
@@ -115,45 +130,11 @@ test("Game over when next-step-counter + 1 reach the sum of arithmetic progressi
 
         if (tetris.getState().gameIsOver) {        
             expect(tetris.getState().stackedSquares.length).toBe(height - 1);
-            expect(moveCounter + 1).toBe(endCounter);
+            expect(moveCounter + step).toBe(endCounter);
             break;
         };
         moveCounter ++;
     };
 });
-
-// test("Game over one move after board is full", () => {
-//     let max = 100;
-//     let moveCounter = 0;
-//     tetris.start();
-//     do {
-//         tetris.moveDown(1);
-//         if(tetris.getState().squares.length === height) {
-//             tetris.moveDown(1);
-//             expect(tetris.getStatus()).toEqual("Game over")
-//             break
-//         }
-//         moveCounter ++;
-//     } while (moveCounter < height * max)
-// })
-
-
-// test('test game over after some time has passed', done => {
-//     let timer = 0;
-//     const tempo = 1000;
-//     tetris.start();
-//     expect(tetris.getStatus()).toEqual("Game started");
-//     setInterval( 
-//         () => {
-//             timer ++
-//             if (timer === 210) {
-//                 expect(tetris.getStatus()).toEqual("Game over");
-//                 done();
-//             }
-//         },
-//         tempo 
-//     );
-// })
-
 
 
