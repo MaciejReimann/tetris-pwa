@@ -12,8 +12,8 @@ let state = {};
 // Fill board with given parameters and fill state with initial state;
 function init(width, height, tempo, step) {
     board = {
-        width,
-        height,
+        width: width * step,
+        height: height * step,
         tempo,
         step,
         startPoint: {x: width / 2, y: 0}

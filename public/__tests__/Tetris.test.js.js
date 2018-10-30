@@ -5,7 +5,7 @@ const tetris = require('../scripts/Tetris');
 const defaultBoard = {
     width: 6,
     height: 6,
-    tempo: 1000,
+    tempo: 1,
     step: 1,
     startPoint: {x: 3, y: 0}
 };
@@ -18,10 +18,10 @@ describe("Initial state for default setup", () => {
     });
     
     test("Width setup", () => {
-        expect(tetris.getBoard().width).toBe(width)
+        expect(tetris.getBoard().width).toBe(width * step)
     });
     test("Height setup", () => {
-        expect(tetris.getBoard().height).toBe(height)
+        expect(tetris.getBoard().height).toBe(height * step)
     });
     test("Tempo setup", () => {
         expect(tetris.getBoard().tempo).toBe(tempo)
@@ -49,15 +49,15 @@ describe("Starting game", () => {
         expect(tetris.getState().gameStarted).toBeTruthy();
         expect(tetris.getState().gameIsOver).toBeFalsy();
     });
-    test("Pivot location dropped down one step per second", () => {
+    test("Pivot location dropped down one step per tempo", () => {
         jest.useFakeTimers();        
         let timer = 0;
         let moveCounter = 0;
         tetris.start();
         while (timer < height) {
-            const movedPivot = {x: width / 2, y: timer};
+            const movedPivot = {x: width / 2, y: step * timer};
             expect(tetris.getState().pivotLocation).toEqual(movedPivot);
-            jest.advanceTimersByTime(1000 * step);            
+            jest.advanceTimersByTime(tempo);            
             timer ++;
         };
     });
@@ -130,7 +130,7 @@ test("Game over when next-step-counter + 1 reach the sum of arithmetic progressi
 
         if (tetris.getState().gameIsOver) {        
             expect(tetris.getState().stackedSquares.length).toBe(height - 1);
-            expect(moveCounter + step).toBe(endCounter);
+            expect(moveCounter + 1).toBe(endCounter);
             break;
         };
         moveCounter ++;
