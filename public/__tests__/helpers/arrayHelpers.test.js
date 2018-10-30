@@ -19,11 +19,8 @@ describe("Test getRandomArrayItem()", () => {
             if ( !tempArray.includes(randomItem) ) {
                 tempArray = tempArray.concat(randomItem);
             };
-            counter ++;
         };
-        console.log(counter)
     });
-
 });
 
 describe("Test createAndPopulateArray()", () => {
