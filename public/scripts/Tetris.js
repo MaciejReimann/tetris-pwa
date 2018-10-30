@@ -14,7 +14,7 @@ function init(width, height, tempo, step) {
     board = {
         width: width * step,
         height: height * step,
-        tempo,
+        tempo: tempo,
         step,
         startPoint: {x: width / 2, y: 0}
     };
