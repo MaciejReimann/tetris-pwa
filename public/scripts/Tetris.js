@@ -4,26 +4,29 @@ const {
     createPoint,
     arePointsEqual
 } = require('./helpers/pointsHelpers');
+const tetrominoStock = require('./helpers/tetrominosHelpers');
 
 // Create empty object to store the data in;
 let board = {};
 let state = {};
 
 // Fill board with given parameters and fill state with initial state;
-function init(width, height, tempo, step) {
+function init(width, height, tempo, step, stockLength) {
     board = {
         width: width * step,
         height: height * step,
         tempo: tempo,
         step,
-        startPoint: {x: width / 2, y: 0}
+        startPoint: {x: width / 2, y: 0},
+        stockLength: 3
     };
     state = {
         gameStarted: false,
         gameIsOver: false,
         pivotLocation: board.startPoint,
-        tetrisSquares: [],
-        stackedSquares: []
+        tetrominoStock: tetrominoStock.build(board.stockLength),
+        tetrominoLocation: [], //falling tetromino 's squarecenters
+        stackedSquares: [] // stacked down tetrominos
     };
 };
 
@@ -53,6 +56,8 @@ function willHitOthers(movedPoint, otherPoints) {
         })
     );   
 };
+
+
 
 // Check if the pivot after move neither
 // get outside the board or hit stacked squares;

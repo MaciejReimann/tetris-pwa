@@ -7,12 +7,13 @@ const defaultBoard = {
     height: 6,
     tempo: 1,
     step: 1,
-    startPoint: {x: 3, y: 0}
+    startPoint: {x: 3, y: 0},
+    stockLength: 3
 };
 
 
 describe("Initial state for default setup", () => {
-    const { width, height, tempo, step, startPoint } = defaultBoard;    
+    const { width, height, tempo, step, startPoint, stockLength } = defaultBoard;    
     beforeEach(() => {        
         tetris.init(width, height, tempo, step);
     });
@@ -32,10 +33,13 @@ describe("Initial state for default setup", () => {
     test("Startpoint setup", () => {
         expect(tetris.getBoard().startPoint).toEqual(startPoint)
     });
+    test("Stocklength setup", () => {
+        expect(tetris.getBoard().stockLength).toEqual(stockLength)
+    });
 })
 
 describe("Starting game", () => {
-    const { width, height, tempo, step, startPoint } = defaultBoard;
+    const { width, height, tempo, step, startPoint, stockLength } = defaultBoard;
     beforeEach(() => {
         tetris.init(width, height, tempo, step);
     });
@@ -49,10 +53,13 @@ describe("Starting game", () => {
         expect(tetris.getState().gameStarted).toBeTruthy();
         expect(tetris.getState().gameIsOver).toBeFalsy();
     });
+    test("Tetrominos stock setup", () => {
+        tetris.start();
+        expect(tetris.getState().tetrominoStock.length).toBe(stockLength);
+    });
     test("Pivot location dropped down one step per tempo", () => {
         jest.useFakeTimers();        
         let timer = 0;
-        let moveCounter = 0;
         tetris.start();
         while (timer < height) {
             const movedPivot = {x: width / 2, y: step * timer};

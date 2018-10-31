@@ -44,9 +44,6 @@ function _getRandomTetromino() {
 
 function build(length) {
   currentStock = createAndPopulateArray(length, _getRandomTetromino);
-};
-
-function showCurrent() {
   return currentStock;
 };
 
@@ -57,6 +54,5 @@ function getFirstAndReplenish() {
 
 module.exports = {
   build,
-  showCurrent,
   getFirstAndReplenish,
 };
