@@ -2,9 +2,18 @@
 
 const { 
     createPoint,
-    arePointsEqual
+    addTwoPoints,
+    movePoint,
+    movePointOnY,
+    movePointOnX,
+    multiplyPoint,
+    arePointsEqual,   
+    rotatePointOnGlobalZero 
 } = require('./helpers/pointsHelpers');
-const tetrominoStock = require('./helpers/tetrominosHelpers');
+const tetrominoStock = require('./helpers/tetrominoCreation');
+const {
+    getGlobalTetrominoVertices
+} = require('./helpers/tetrominoManipulation');
 
 // Create empty object to store the data in;
 let board = {};
@@ -18,6 +27,7 @@ function init(width, height, tempo, step, stockLength) {
         height: height * step,
         tempo: tempo,
         step,
+        resolution: step,
         startPoint: {x: width / 2, y: 0},
     };
     state = {
@@ -25,22 +35,15 @@ function init(width, height, tempo, step, stockLength) {
         gameIsOver: false,
         pivotLocation: board.startPoint,
         tetrominoStock: tetrominoStock.build(stockLength),
-        tetrominoLocation: [], //falling tetromino 's squarecenters
-        stackedSquares: [] // stacked down tetrominos
+        tetrominoSquares: [], //falling tetromino 's squares' vertices
+        stackedSquares: [] // stacked down tetrominos' squares' vertices
     };
 };
 
 // PRIVATE METHODS
-function movePoint(point, x, y) {
-    return createPoint(point.x + x, point.y + y);
-};
-
-function movePointDown(point, y) {
-    return movePoint(point, 0, y);
-};
 
 function movePointDownOneStep(point) {
-    return movePointDown(point, board.step);
+    return movePointOnY(point, board.step);
 };
 
 // Check if a point after move doesn't get outside the board;
@@ -57,7 +60,7 @@ function willHitOthers(movedPoint, otherPoints) {
     );   
 };
 
-// 
+
 
 // Update tetromino current location;
 

@@ -11,7 +11,6 @@ const defaultBoard = {
     stockLength: 3
 };
 
-
 describe("Initial state for default setup", () => {
     const { width, height, tempo, step, startPoint, stockLength } = defaultBoard;    
     beforeEach(() => {        
@@ -110,7 +109,7 @@ test("Pivot starts back from 0, stackedSquares increment by one", () => {
     });
 
     while (moveCounter < height * height) {
-        tetris.nextStep(step);
+        tetris.nextStep();
 
         if (tetris.getState().pivotLocation.y === 0) {
             stackCounter ++;
