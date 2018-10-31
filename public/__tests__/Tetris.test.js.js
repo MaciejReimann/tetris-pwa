@@ -15,7 +15,7 @@ const defaultBoard = {
 describe("Initial state for default setup", () => {
     const { width, height, tempo, step, startPoint, stockLength } = defaultBoard;    
     beforeEach(() => {        
-        tetris.init(width, height, tempo, step);
+        tetris.init(width, height, tempo, step, stockLength);
     });
     
     test("Width setup", () => {
@@ -32,16 +32,13 @@ describe("Initial state for default setup", () => {
     });
     test("Startpoint setup", () => {
         expect(tetris.getBoard().startPoint).toEqual(startPoint)
-    });
-    test("Stocklength setup", () => {
-        expect(tetris.getBoard().stockLength).toEqual(stockLength)
-    });
+    });;
 })
 
 describe("Starting game", () => {
-    const { width, height, tempo, step, startPoint, stockLength } = defaultBoard;
+    const { width, height, tempo, step, stockLength } = defaultBoard;
     beforeEach(() => {
-        tetris.init(width, height, tempo, step);
+        tetris.init(width, height, tempo, step, stockLength);
     });
     
     test("Game status before start", () => {
@@ -71,9 +68,9 @@ describe("Starting game", () => {
 })
 
 describe("Pivot position after next step", () => {
-    const { width, height, tempo, step, startPoint } = defaultBoard;
+    const { width, height, tempo, step, startPoint, stockLength } = defaultBoard; 
     beforeEach(() => {        
-        tetris.init(width, height, tempo, step);
+        tetris.init(width, height, tempo, step, stockLength);
         tetris.start();
     });
     
@@ -103,12 +100,12 @@ describe("Pivot position after next step", () => {
 });
 
 test("Pivot starts back from 0, stackedSquares increment by one", () => {
-    const { width, height, tempo, step, startPoint } = defaultBoard;
+    const { width, height, tempo, step, stockLength } = defaultBoard; 
     let stackCounter = 1;
     let moveCounter = 1;
 
     beforeEach(() => {        
-        tetris.init(width, height, tempo, step);
+        tetris.init(width, height, tempo, step, stockLength);
         tetris.start();
     });
 
@@ -124,12 +121,12 @@ test("Pivot starts back from 0, stackedSquares increment by one", () => {
 });
 
 test("Game over when next-step-counter + 1 reach the sum of arithmetic progression", () => {
-    const { width, height, tempo, step, startPoint } = defaultBoard;
+    const { width, height, tempo, step, stockLength } = defaultBoard; 
     const sumArProgression = (n, a1, an) => n * (a1 + an) / 2;
     const endCounter = sumArProgression(height + 1, height, 0);
     let moveCounter = 1;
 
-    tetris.init(width, height, tempo, step);
+    tetris.init(width, height, tempo, step, stockLength);
     tetris.start();
 
     while (moveCounter < height * height) {

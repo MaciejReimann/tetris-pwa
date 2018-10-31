@@ -12,19 +12,19 @@ let state = {};
 
 // Fill board with given parameters and fill state with initial state;
 function init(width, height, tempo, step, stockLength) {
+    // console.log(tetrominoStock.build(stockLength))
     board = {
         width: width * step,
         height: height * step,
         tempo: tempo,
         step,
         startPoint: {x: width / 2, y: 0},
-        stockLength: 3
     };
     state = {
         gameStarted: false,
         gameIsOver: false,
         pivotLocation: board.startPoint,
-        tetrominoStock: tetrominoStock.build(board.stockLength),
+        tetrominoStock: tetrominoStock.build(stockLength),
         tetrominoLocation: [], //falling tetromino 's squarecenters
         stackedSquares: [] // stacked down tetrominos
     };
@@ -57,6 +57,9 @@ function willHitOthers(movedPoint, otherPoints) {
     );   
 };
 
+// 
+
+// Update tetromino current location;
 
 
 // Check if the pivot after move neither

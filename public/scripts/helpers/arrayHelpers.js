@@ -5,7 +5,7 @@ function getRandomArrayItem(array) {
 };
   
 function createAndPopulateArray(length, callback) {
-    return Array(length).fill().map((_, i) => callback());
+    return Array(length).fill().map(() => callback());
 };
 
 function clone(array) {
