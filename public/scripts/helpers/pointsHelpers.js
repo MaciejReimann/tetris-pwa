@@ -1,5 +1,5 @@
 
-const merge = (obj1, obj2) => Object.assign({}, obj1, obj2);
+
 
 function createPoint(x, y) {
     return {
@@ -8,33 +8,44 @@ function createPoint(x, y) {
     };
 };
 
-function addTwoPoints(p1, p2) {
+function addTwoPoints(point1, point2) {
+    return createPoint(point1.x + point2.x, point1.y + point2.y);
+};
+
+function multiplyPoint(point, n) {
+    return createPoint(point.x * n, point.y * n)
+};
+
+function arePointsEqual(point1, point2) {
+    return point1.x === point2.x && point1.y === point2.y;
+};
+
+function translatePointToPolar(point, angle) {
     return {
-        x: p1.x + p2.x,
-        y: p1.y + p2.y
+        r: Math.sqrt(Math.pow(point.x, 2) + Math.pow(point.y, 2)),
+        angle: Math.atan2(point.y, point.x) * (180 / Math.PI) + angle
     };
 };
 
-function multiplyPoint(p1, n) {
+function translatePointToCartesian(point) {
+    const roundValue = n => Math.round(n * 1000) / 1000;
     return {
-        x: p1.x * n,
-        y: p1.y * n
+        x: roundValue(point.r * Math.cos(point.angle * (Math.PI / 180))),
+        y: roundValue(point.r * Math.sin(point.angle * (Math.PI / 180)))
     };
 };
 
-function arePointsEqual(p1, p2) {
-    return p1.x === p2.x && p1.y === p2.y;
+function rotatePointOnGlobalZero(point, angle) {
+    return translatePointToCartesian(translatePointToPolar(point, angle));
 };
-
-// function isPointWithinRange(point, xMin, yMin, yMin, yMax) {
-//     point.x > 
-//     return {}
-// }
 
 
 module.exports = {
     createPoint,
     addTwoPoints,
     multiplyPoint,
-    arePointsEqual
+    arePointsEqual,
+    translatePointToPolar,
+    translatePointToCartesian,
+    rotatePointOnGlobalZero
 } 
