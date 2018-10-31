@@ -47,6 +47,10 @@ function build(length) {
   return currentStock;
 };
 
+function getCurrent() {
+  return currentStock;
+};
+
 function getFirstAndReplenish() {
   currentStock.push(_getRandomTetromino());
   return currentStock.shift();
@@ -54,5 +58,6 @@ function getFirstAndReplenish() {
 
 module.exports = {
   build,
+  getCurrent,
   getFirstAndReplenish,
 };

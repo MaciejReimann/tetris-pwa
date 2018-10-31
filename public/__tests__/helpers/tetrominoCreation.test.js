@@ -1,4 +1,4 @@
-const tetrominoStock = require('../../scripts/helpers/tetrominosHelpers');
+const tetrominoStock = require('../../scripts/helpers/tetrominoCreation');
 const { clone } = require('../../scripts/helpers/arrayHelpers');
 
 test("From a stock of n tetrominos is generated, get first and replenish the stock", () => {
