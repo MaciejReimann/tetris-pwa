@@ -8,6 +8,18 @@ function createPoint(x, y) {
     };
 };
 
+function movePoint(point, x, y) {
+    return createPoint(point.x + x, point.y + y);
+};
+
+function movePointOnY(point, y) {
+    return movePoint(point, 0, y);
+};
+
+function movePointOnX(point, x) {
+    return movePoint(point, x, 0);
+};
+
 function addTwoPoints(point1, point2) {
     return createPoint(point1.x + point2.x, point1.y + point2.y);
 };
@@ -39,9 +51,11 @@ function rotatePointOnGlobalZero(point, angle) {
     return translatePointToCartesian(translatePointToPolar(point, angle));
 };
 
-
 module.exports = {
     createPoint,
+    movePoint,
+    movePointOnY,
+    movePointOnX,
     addTwoPoints,
     multiplyPoint,
     arePointsEqual,
