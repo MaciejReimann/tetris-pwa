@@ -9,11 +9,19 @@ function createAndPopulateArray(length, callback) {
 };
 
 function clone(array) {
-    return array.slice(0, array.length)
+    return array.slice(0, array.length);
 };
+
+function carouselArray(array, m) {
+    const n = m % array.length
+    return n >= 0
+        ? array.slice(n, array.length).concat(array.slice(0, n))
+        : array.slice(array.length + n, array.length).concat(array.slice(0, array.length + n))
+}
 
 module.exports = {
     getRandomArrayItem,
     createAndPopulateArray,
-    clone
+    clone,
+    carouselArray
 }

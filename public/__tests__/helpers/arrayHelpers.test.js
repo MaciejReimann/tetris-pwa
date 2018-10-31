@@ -1,6 +1,7 @@
 const {
     getRandomArrayItem,
     createAndPopulateArray,
+    carouselArray
 } = require('../../scripts/helpers/arrayHelpers');
 
 const decimalNumbers = [0,1,2,3,4,5,6,7,8,9];
@@ -38,4 +39,30 @@ describe("Test createAndPopulateArray()", () => {
     test("Create an array of subsequent numbers", () => {
         expect(createAndPopulateArray(9, getNext)).toEqual([0,1,2,3,4,5,6,7,8])
     });
+});
+
+describe("Test carouselArray()", () => {
+    const length = decimalNumbers.length;
+    test("Positive n", () => {
+        expect( carouselArray(decimalNumbers, 0) ).toEqual( decimalNumbers );
+        expect( carouselArray(decimalNumbers, 1) ).toEqual( [1,2,3,4,5,6,7,8,9,0] );
+        expect( carouselArray(decimalNumbers, 2) ).toEqual( [2,3,4,5,6,7,8,9,0,1] );
+        expect( carouselArray(decimalNumbers, 3) ).toEqual( [3,4,5,6,7,8,9,0,1,2] );
+    });
+    test("Positive n greater than array.length", () => {
+        expect( carouselArray(decimalNumbers, length + 1) ).toEqual( [1,2,3,4,5,6,7,8,9,0] );
+        expect( carouselArray(decimalNumbers, length + 2) ).toEqual( [2,3,4,5,6,7,8,9,0,1] );
+        expect( carouselArray(decimalNumbers, length + 3) ).toEqual( [3,4,5,6,7,8,9,0,1,2] );
+    });
+    test("Negative n", () => {
+        expect( carouselArray(decimalNumbers, -1) ).toEqual( [9,0,1,2,3,4,5,6,7,8] );
+        expect( carouselArray(decimalNumbers, -2) ).toEqual( [8,9,0,1,2,3,4,5,6,7] );
+        expect( carouselArray(decimalNumbers, -3) ).toEqual( [7,8,9,0,1,2,3,4,5,6] );
+    });
+    test("Negative n smaller than -array.length", () => {
+        expect( carouselArray(decimalNumbers, -length - 1) ).toEqual( [9,0,1,2,3,4,5,6,7,8] );
+        expect( carouselArray(decimalNumbers, -length - 2) ).toEqual( [8,9,0,1,2,3,4,5,6,7] );
+        expect( carouselArray(decimalNumbers, -length - 3) ).toEqual( [7,8,9,0,1,2,3,4,5,6] );
+    });
+
 });
