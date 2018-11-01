@@ -15,7 +15,7 @@ const T_tetromino = [
     { x: 0.5, y: 0.5 },
     { x: 0.5, y: 1.5 },
     { x: 1.5, y: 0.5 }
-  ];
+];
 
 const I_tetromino = [
   { x: -1.5, y: 0.5 },
@@ -57,6 +57,7 @@ function getFirstAndReplenish() {
 };
 
 module.exports = {
+  allTetrominos, 
   build,
   getCurrent,
   getFirstAndReplenish,
