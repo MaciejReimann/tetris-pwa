@@ -7,7 +7,7 @@ const {
 const {
     addTwoPoints,
     multiplyPoint,
-} = require('../../scripts/helpers/pointsHelpers');
+} = require('../../scripts/helpers/pointHelpers');
 
 const defaultAngle = 0;
 const defaultCenter = { x: 0, y: 0 };

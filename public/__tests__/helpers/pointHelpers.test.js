@@ -6,7 +6,7 @@ const {
     translatePointToPolar,
     translatePointToCartesian,
     rotatePointOnGlobalZero
-} = require('../../scripts/helpers/pointsHelpers');
+} = require('../../scripts/helpers/pointHelpers');
 
 const pointZero = {
     x: 0,

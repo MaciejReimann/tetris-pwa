@@ -1,7 +1,7 @@
 const { 
     addTwoPoints,
     translatePointToCartesian
-} = require('./pointsHelpers');
+} = require('./pointHelpers');
 
 // Returns cartesian global coordinates of a regular polygon vertices;
 function regularPolygon(angle, center, sides, radius) {

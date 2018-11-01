@@ -9,7 +9,7 @@ const {
     multiplyPoint,
     arePointsEqual,   
     rotatePointOnGlobalZero 
-} = require('./helpers/pointsHelpers');
+} = require('./helpers/pointHelpers');
 const tetrominoStock = require('./helpers/tetrominoCreation');
 const {
     getGlobalTetrominoVertices
