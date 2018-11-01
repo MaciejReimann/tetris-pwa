@@ -1,4 +1,5 @@
 const { 
+    isPoint,
     createPoint,
     addTwoPoints,
     multiplyPoint,
@@ -27,6 +28,16 @@ const pointThree = {
     x: 3,
     y: 3
 };
+
+test("Is it a point?", () => {
+    expect(isPoint(pointZero)).toBeTruthy();
+    expect(isPoint(pointOne)).toBeTruthy();
+    expect(isPoint({x: 4, y: 2, name: "point"})).toBeTruthy();
+    expect(isPoint({x: 4, y: 2, z: 42, name: "also a point"})).toBeTruthy();
+    expect(isPoint({x: 4, name: "not a point"})).toBeFalsy();
+    expect(isPoint({x: 4, y: '2', name: "this IS NOT a point however"})).toBeFalsy();
+    expect(isPoint({x: '4', y: 'zwei', name: "nor is this"})).toBeFalsy();
+});
 
 test("Create a point", () => {
     expect(createPoint(0,0)).toEqual(pointZero);

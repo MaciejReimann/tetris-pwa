@@ -1,5 +1,10 @@
-
-
+function isPoint(something) {
+    return typeof something === "object"
+        && something.hasOwnProperty("x") 
+        && something.hasOwnProperty("y")
+        && typeof something.x === 'number'
+        && typeof something.y === 'number'
+};
 
 function createPoint(x, y) {
     return {
@@ -52,6 +57,7 @@ function rotatePointOnGlobalZero(point, angle) {
 };
 
 module.exports = {
+    isPoint,
     createPoint,
     movePoint,
     movePointOnY,
