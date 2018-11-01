@@ -2,9 +2,9 @@ const {
     rotateTetromino,
     scaleTetromino,
     positionTetromino,
-    getGlobalTetrominoLocation,
 } = require('../../scripts/helpers/tetrominoManipulation').test;
 const {
+    getGlobalTetrominoLocation,
     getGlobalTetrominoVertices
 } = require('../../scripts/helpers/tetrominoManipulation');
 

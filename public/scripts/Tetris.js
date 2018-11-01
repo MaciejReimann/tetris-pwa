@@ -10,33 +10,55 @@ const {
     arePointsEqual,   
     rotatePointOnGlobalZero 
 } = require('./helpers/pointHelpers');
+
 const tetrominoStock = require('./helpers/tetrominoCreation');
+
 const {
+    getGlobalTetrominoLocation,
     getGlobalTetrominoVertices
 } = require('./helpers/tetrominoManipulation');
 
 // Create empty object to store the data in;
 let board = {};
 let state = {};
+let intervalID;
 
 // Fill board with given parameters and fill state with initial state;
 function init(width, height, tempo, step, stockLength) {
-    // console.log(tetrominoStock.build(stockLength))
     board = {
         width: width * step,
         height: height * step,
         tempo: tempo,
         step,
         resolution: step,
-        startPoint: {x: width / 2, y: 0},
+        startPoint: createPoint(width / 2, 0),
+        stockLength,
     };
     state = {
+        // a flag changed by start();
         gameStarted: false,
+
+        // a flag changed by nextStep();
         gameIsOver: false,
+
+        // it needs to be stored here to be able to show it before game starts,
+        // after game started, it is assigned a value by tetrominoStock.getCurrent(),
+        // in nextStep();
+        tetrominoStock: tetrominoStock.build(stockLength), 
+
         pivotLocation: board.startPoint,
-        tetrominoStock: tetrominoStock.build(stockLength),
-        tetrominoSquares: [], //falling tetromino 's squares' vertices
-        stackedSquares: [] // stacked down tetrominos' squares' vertices
+
+        // falling tetromino local square centers, i.e. its definition, 
+        // first time assigned a value on start();
+        tetrominoType: [],
+
+        // falling tetromino 's square centers' global vertices, 
+        // recalculated in nextStep();
+        tetrominoSquares: [],
+
+        // stacked down tetrominos' square centers' global vertices,
+        //  recalculated in nextStep();
+        stackedSquares: []
     };
 };
 
@@ -47,30 +69,30 @@ function movePointDownOneStep(point) {
 };
 
 // Check if a point after move doesn't get outside the board;
-function willHitBottom(movedPoint) {
-    return movePointDownOneStep(movedPoint).y >= board.height;
+function willHitBottom(movedPoints) {
+    return movedPoints.map(
+        movedPoint => movePointDownOneStep(movedPoint).y >= board.height
+    );
 };
 
 // Check if if a point after move doesn't hit other points;
-function willHitOthers(movedPoint, otherPoints) {
+function willHitOthers(movedPoints, otherPoints) {
     return (
         otherPoints.some(point => {
-            return arePointsEqual(movePointDownOneStep(movedPoint), point)
+            return movedPoints.map(movedPoint => 
+                arePointsEqual(movePointDownOneStep(movedPoint), point)
+            );            
         })
     );   
 };
 
 
-
-// Update tetromino current location;
-
-
-// Check if the pivot after move neither
-// get outside the board or hit stacked squares;
+// Check if the tetromino square centers after moving pivot neither
+// get outside the board or hit the stacked squares;
 function canMoveDownNow() {
     return (
-        !willHitBottom(state.pivotLocation) && 
-        !willHitOthers(state.pivotLocation, state.stackedSquares)
+        !willHitBottom(state.tetrominoSquares) && 
+        !willHitOthers(state.tetrominoSquares, state.stackedSquares)
     );
 };
 
@@ -85,10 +107,11 @@ function getState() {
 
 function start() {
     state.gameStarted = true;
+    state.tetrominoType = tetrominoStock.getFirstAndReplenish();
+    state.tetrominoStock = tetrominoStock.getCurrent();
     // while (!state.gameIsOver) {
-
     // };
-    const ID = setInterval(() => nextStep(), board.tempo)
+    intervalID = setInterval(() => nextStep(), board.tempo)
 };
 
 function pause() {
@@ -103,9 +126,9 @@ function restore() {
 
 function nextStep() {    
     if( canMoveDownNow() ) {
-        state.pivotLocation = movePointDownOneStep(state.pivotLocation);        
+        state.pivotLocation = movePointDownOneStep(state.pivotLocation);
     } else {
-        state.stackedSquares = state.stackedSquares.concat(state.pivotLocation);
+        state.stackedSquares = state.stackedSquares.concat(state.tetrominoSquares);
         state.pivotLocation = board.startPoint;
         state.gameIsOver =  !canMoveDownNow() ? true : false;
     };
