@@ -41,16 +41,22 @@ function init(width, height, tempo, step, stockLength) {
         // a flag changed by nextStep();
         gameIsOver: false,
 
-        // it needs to be stored here to be able to show it before game starts,
-        // after game started, it is assigned a value by tetrominoStock.getCurrent(),
-        // in nextStep();
+        // create a stock of tetrominos to show them before the game starts,
+        // after game will have started, this property will be assigned a value
+        // by tetrominoStock.getCurrent() in nextStep();
         tetrominoStock: tetrominoStock.build(stockLength), 
 
+        // a reference point for all tetromino calculations, after it is moved, 
+        // tetrominoSquares are recalculated;
         pivotLocation: board.startPoint,
 
         // falling tetromino local square centers, i.e. its definition, 
-        // first time assigned a value on start();
+        // first time assigned a value on start(), keeps the valuea untill 
+        // tetromino hits the bottom;
         tetrominoType: [],
+
+        // falling tetromino default angle
+        tetrominoAngle: 0,
 
         // falling tetromino 's square centers' global vertices, 
         // recalculated in nextStep();
@@ -70,7 +76,7 @@ function movePointDownOneStep(point) {
 
 // Check if a point after move doesn't get outside the board;
 function willHitBottom(movedPoints) {
-    return movedPoints.map(
+    return movedPoints.some(
         movedPoint => movePointDownOneStep(movedPoint).y >= board.height
     );
 };
@@ -97,6 +103,16 @@ function canMoveDownNow() {
 };
 
 // PUBLIC METHODS
+function overrideToTest() {
+    state.gameStarted = true;
+    state.tetrominoStock = tetrominoStock.testConfig(3);
+    state.tetrominoType = tetrominoStock.getFirstAndReplenish();
+    state.tetrominoSquares = getGlobalTetrominoLocation(
+        state.tetrominoType, state.tetrominoAngle, board.step, state.pivotLocation
+    );
+    intervalID = setInterval(() => nextStep(), board.tempo);
+};
+
 function getBoard() {
     return board
 };
@@ -109,9 +125,12 @@ function start() {
     state.gameStarted = true;
     state.tetrominoType = tetrominoStock.getFirstAndReplenish();
     state.tetrominoStock = tetrominoStock.getCurrent();
+    state.tetrominoSquares = getGlobalTetrominoLocation(
+        state.tetrominoType, state.tetrominoAngle, board.step, state.pivotLocation
+    );
     // while (!state.gameIsOver) {
     // };
-    intervalID = setInterval(() => nextStep(), board.tempo)
+    intervalID = setInterval(() => nextStep(), board.tempo);
 };
 
 function pause() {
@@ -127,11 +146,15 @@ function restore() {
 function nextStep() {    
     if( canMoveDownNow() ) {
         state.pivotLocation = movePointDownOneStep(state.pivotLocation);
+        
     } else {
         state.stackedSquares = state.stackedSquares.concat(state.tetrominoSquares);
         state.pivotLocation = board.startPoint;
         state.gameIsOver =  !canMoveDownNow() ? true : false;
     };
+    state.tetrominoSquares = getGlobalTetrominoLocation(
+        state.tetrominoType, state.tetrominoAngle, board.step, state.pivotLocation
+    );
 };
 
 function moveRight() {
@@ -143,6 +166,7 @@ function moveLeft() {
 }
 
 module.exports = {
+    overrideToTest,
     getBoard,
     getState,
     init,
