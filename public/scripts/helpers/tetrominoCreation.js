@@ -34,6 +34,10 @@ const C_tetromino = [
 // const allTetrominos = [T_tetromino, T_tetromino, T_tetromino];
 
 const allTetrominos = [T_tetromino, I_tetromino, C_tetromino];
+const tetrominosHeight_1 = [];
+const tetrominosHeight_2 = [];
+const tetrominosHeight_3 = [];
+
 // const allTetrominos = ['T_tetromino', 'I_tetromino', 'C_tetromino'];
 
 let currentStock = [];
@@ -46,7 +50,7 @@ function _getRandomTetromino() {
 
 // PUBLIC METHODS
 
-function testConfig(length, type) {
+function setTetrominoHeight(length, height) {
   currentStock = Array(length).fill(I_tetromino);
 }
 
@@ -65,7 +69,8 @@ function getFirstAndReplenish() {
 };
 
 module.exports = {
-  testConfig,
+  setTetrominoHeight,
+  setTetrominoType,
   allTetrominos, 
   build,
   getCurrent,
