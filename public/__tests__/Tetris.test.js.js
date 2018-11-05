@@ -1,6 +1,8 @@
 // Testing tetris API
 const tetris = require('../scripts/Tetris');
 
+const { clone } = require('../scripts/helpers/arrayHelpers');
+
 // Board default setup constants
 const defaultBoard = {
     width: 6,
@@ -48,17 +50,19 @@ describe("Starting game", () => {
         expect(tetris.getState().gameStarted).toBeTruthy();
         expect(tetris.getState().gameIsOver).toBeFalsy();
     });
-    // test("On start, first tetromino took from stock and stock replenished", () => {
-    //     const stockBeforeStart = tetris.getState().tetrominoStock;
-    //     tetris.start();
-    //     // expect(tetris.getState().tetrominoType).toEqual(stockBeforeStart[0]);
-    //     // expect(tetris.getState().tetrominoStock[0]).toEqual(stockBeforeStart[1]);
-    //     // expect(tetris.getState().tetrominoStock[1]).toEqual(stockBeforeStart[2]);
-    // });
+    test("On start, first tetromino took from stock and stock replenished", () => {
+        // It has to be cloned, otherwise only the reference is stored and 
+        // not the actual array;
+        const stockBeforeStart = clone( tetris.getState().tetrominoStock );
+        tetris.start();
+        expect(tetris.getState().tetrominoType).toEqual(stockBeforeStart[0]);
+        expect(tetris.getState().tetrominoStock[0]).toEqual(stockBeforeStart[1]);
+        expect(tetris.getState().tetrominoStock[1]).toEqual(stockBeforeStart[2]);
+    });
     // test("Pivot location dropped down one step per tempo", () => {
     //     jest.useFakeTimers();        
     //     let timer = 0;
-    //     tetris.start();
+    //     tetris.start();aA
     //     while (timer < height) {
     //         const movedPivot = {x: width / 2, y: step * timer};
     //         expect(tetris.getState().pivotLocation).toEqual(movedPivot);

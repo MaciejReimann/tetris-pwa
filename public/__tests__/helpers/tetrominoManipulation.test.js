@@ -22,7 +22,6 @@ const defaulPIvot = { x: 0, y: 0 };
 const movedPivotRight = { x: 1, y: 0 };
 const movedPivotLeft = { x: -1, y: 0 };
 
-
 describe("Tetromino manipulation", () => {
     const tetrominoMovedOneUp = I_tetromino.map(squareCenter => 
         movePointOnY(squareCenter, -1)).reverse();

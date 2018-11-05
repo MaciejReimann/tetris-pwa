@@ -32,6 +32,8 @@ const C_tetromino = [
 ];
 
 const allTetrominos = [T_tetromino, I_tetromino, C_tetromino];
+// const allTetrominos = ['T_tetromino', 'I_tetromino', 'C_tetromino'];
+
 let currentStock = [];
 
 // PRIVATE METHODS

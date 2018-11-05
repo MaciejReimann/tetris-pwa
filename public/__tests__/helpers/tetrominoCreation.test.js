@@ -21,28 +21,18 @@ describe('', () => {
             counter ++;
         };
     });
-    test("Get current stock", () => {  
+    test("Accessing the stock", () => {  
         const stock = tetrominoStock.build(3);
-        const originalStock = clone(stock); 
-
+        const originalStock = clone(stock);
         // before doing anything
         expect(tetrominoStock.getCurrent()).toEqual(stock);
-        expect(tetrominoStock.getCurrent()[0]).toEqual(originalStock[0]);
-        
-        // once
-        tetrominoStock.getFirstAndReplenish();
-        expect(tetrominoStock.getCurrent().slice(0, stock.length - 1))
-            .toEqual(originalStock.slice(1, stock.length));
-
-        // twice
-        tetrominoStock.getFirstAndReplenish();
-        expect(tetrominoStock.getCurrent().slice(0, stock.length - 2))
-            .toEqual(originalStock.slice(2, stock.length));
+        expect(tetrominoStock.getCurrent()[0]).toEqual(originalStock[0]);        
+        // first time
+        expect(tetrominoStock.getFirstAndReplenish()).toEqual(originalStock[0]);
+        // second time
+        expect(tetrominoStock.getFirstAndReplenish()).toEqual(originalStock[1]);
+        // third time
         expect(tetrominoStock.getCurrent()[0]).toEqual(originalStock[stock.length - 1])
-
-        // third time...
-        tetrominoStock.getFirstAndReplenish();
-        expect(tetrominoStock.getCurrent().slice(0, stock.length - 3))
-            .toEqual(originalStock.slice(3, stock.length));
+        expect(tetrominoStock.getFirstAndReplenish()).toEqual(originalStock[2]);
     });
 })
