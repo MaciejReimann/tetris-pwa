@@ -24,20 +24,25 @@ describe('', () => {
     test("Get current stock", () => {  
         const stock = tetrominoStock.build(3);
         const originalStock = clone(stock); 
+
+        // before doing anything
         expect(tetrominoStock.getCurrent()).toEqual(stock);
         expect(tetrominoStock.getCurrent()[0]).toEqual(originalStock[0]);
+        
         // once
         tetrominoStock.getFirstAndReplenish();
         expect(tetrominoStock.getCurrent().slice(0, stock.length - 1))
             .toEqual(originalStock.slice(1, stock.length));
+
         // twice
         tetrominoStock.getFirstAndReplenish();
         expect(tetrominoStock.getCurrent().slice(0, stock.length - 2))
             .toEqual(originalStock.slice(2, stock.length));
+        expect(tetrominoStock.getCurrent()[0]).toEqual(originalStock[stock.length - 1])
+
         // third time...
         tetrominoStock.getFirstAndReplenish();
         expect(tetrominoStock.getCurrent().slice(0, stock.length - 3))
             .toEqual(originalStock.slice(3, stock.length));
-        expect(tetrominoStock.getCurrent()[0]).toEqual(originalStock[stock.length - 1])
     });
 })
