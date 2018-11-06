@@ -103,9 +103,10 @@ function canMoveDownNow() {
 };
 
 // PUBLIC METHODS
-function overrideToTest() {
+
+function overrideToTest(length, height, type) {
     state.gameStarted = true;
-    state.tetrominoStock = tetrominoStock.testConfig(3);
+    state.tetrominoStock = tetrominoStock.build(length, height);
     state.tetrominoType = tetrominoStock.getFirstAndReplenish();
     state.tetrominoSquares = getGlobalTetrominoLocation(
         state.tetrominoType, state.tetrominoAngle, board.step, state.pivotLocation
