@@ -107,9 +107,10 @@ function canMoveDownNow() {
 function overrideToTest(length, height, type) {
     state.gameStarted = true;
     state.tetrominoStock = tetrominoStock.build(length, height);
-    state.tetrominoType = tetrominoStock.getFirstAndReplenish();
+    state.tetrominoType = tetrominoStock.getFirstAndReplenish(); 
+    // ! accessing center points' coordinates HERE:
     state.tetrominoSquares = getGlobalTetrominoLocation(
-        state.tetrominoType, state.tetrominoAngle, board.step, state.pivotLocation
+        state.tetrominoType.centers, state.tetrominoAngle, board.step, state.pivotLocation
     );
     intervalID = setInterval(() => nextStep(), board.tempo);
 };
@@ -126,8 +127,9 @@ function start() {
     state.gameStarted = true;
     state.tetrominoType = tetrominoStock.getFirstAndReplenish();
     state.tetrominoStock = tetrominoStock.getCurrent();
+    // ! accessing center points' coordinates HERE:
     state.tetrominoSquares = getGlobalTetrominoLocation(
-        state.tetrominoType, state.tetrominoAngle, board.step, state.pivotLocation
+        state.tetrominoType.centers, state.tetrominoAngle, board.step, state.pivotLocation
     );
     // while (!state.gameIsOver) {
     // };
@@ -154,7 +156,7 @@ function nextStep() {
         state.gameIsOver =  !canMoveDownNow() ? true : false;
     };
     state.tetrominoSquares = getGlobalTetrominoLocation(
-        state.tetrominoType, state.tetrominoAngle, board.step, state.pivotLocation
+        state.tetrominoType.centers, state.tetrominoAngle, board.step, state.pivotLocation
     );
 };
 

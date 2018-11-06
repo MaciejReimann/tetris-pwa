@@ -16,60 +16,61 @@ const {
 } = require('../../scripts/helpers/pointHelpers');
 
 const tetrominoStock = require('../../scripts/helpers/tetrominoStock');
-const I_tetromino = tetrominoStock.build(1,1)[0];
+const I_type = tetrominoStock.build(1,1)[0].centers;
+
 
 const defaulPIvot = { x: 0, y: 0 };
 const movedPivotRight = { x: 1, y: 0 };
 const movedPivotLeft = { x: -1, y: 0 };
 
 describe("Tetromino manipulation", () => {
-    const tetrominoMovedOneUp = I_tetromino.map(squareCenter => 
+    const tetrominoMovedOneUp = I_type.map(squareCenter => 
         movePointOnY(squareCenter, -1)).reverse();
-    const tetrominoScaledBy_2 = I_tetromino.map(squareCenter => 
+    const tetrominoScaledBy_2 = I_type.map(squareCenter => 
         multiplyPoint(squareCenter, 2));
-    const tetrominoScaledBy_Half = I_tetromino.map(squareCenter => 
+    const tetrominoScaledBy_Half = I_type.map(squareCenter => 
         multiplyPoint(squareCenter, .5));
-    const tetrominoMovedByOneRight = I_tetromino.map(squareCenter => 
+    const tetrominoMovedByOneRight = I_type.map(squareCenter => 
         addTwoPoints(squareCenter, movedPivotRight));
-    const tetrominoMovedByOneLeft = I_tetromino.map(squareCenter => 
+    const tetrominoMovedByOneLeft = I_type.map(squareCenter => 
         addTwoPoints(squareCenter, movedPivotLeft));
 
     test('Tetromino rotation', () => {
-        expect(rotateTetromino(I_tetromino, 360)).toEqual(I_tetromino);
-        expect(rotateTetromino(I_tetromino, 0)).toEqual(I_tetromino);
-        expect(rotateTetromino(I_tetromino, 180)).toEqual(tetrominoMovedOneUp);
+        expect(rotateTetromino(I_type, 360)).toEqual(I_type);
+        expect(rotateTetromino(I_type, 0)).toEqual(I_type);
+        expect(rotateTetromino(I_type, 180)).toEqual(tetrominoMovedOneUp);
     });
     test('Tetromino scaling', () => {
-        expect(scaleTetromino(I_tetromino, 1)).toEqual(I_tetromino);
-        expect(scaleTetromino(I_tetromino, 2)).toEqual(tetrominoScaledBy_2);
-        expect(scaleTetromino(I_tetromino, .5)).toEqual(tetrominoScaledBy_Half);
+        expect(scaleTetromino(I_type, 1)).toEqual(I_type);
+        expect(scaleTetromino(I_type, 2)).toEqual(tetrominoScaledBy_2);
+        expect(scaleTetromino(I_type, .5)).toEqual(tetrominoScaledBy_Half);
     });
     test('Position tetromino', () => {
-        expect(positionTetromino(I_tetromino, defaulPIvot)).toEqual(I_tetromino);
-        expect(positionTetromino(I_tetromino, movedPivotRight)).toEqual(tetrominoMovedByOneRight);
-        expect(positionTetromino(I_tetromino, movedPivotLeft)).toEqual(tetrominoMovedByOneLeft);
+        expect(positionTetromino(I_type, defaulPIvot)).toEqual(I_type);
+        expect(positionTetromino(I_type, movedPivotRight)).toEqual(tetrominoMovedByOneRight);
+        expect(positionTetromino(I_type, movedPivotLeft)).toEqual(tetrominoMovedByOneLeft);
     });
     test('Position after manipulation', () => {
-        expect(getGlobalTetrominoLocation(I_tetromino, 360, 1, defaulPIvot)).toEqual(I_tetromino);
-        expect(getGlobalTetrominoLocation(I_tetromino, 0, 1, defaulPIvot)).toEqual(I_tetromino);
-        expect(getGlobalTetrominoLocation(I_tetromino, 0, 2, defaulPIvot)).toEqual(tetrominoScaledBy_2);
-        expect(getGlobalTetrominoLocation(I_tetromino, 180, 1, defaulPIvot)).toEqual(tetrominoMovedOneUp);
-        expect(getGlobalTetrominoLocation(I_tetromino, 0, 1, movedPivotRight)).toEqual(tetrominoMovedByOneRight);
+        expect(getGlobalTetrominoLocation(I_type, 360, 1, defaulPIvot)).toEqual(I_type);
+        expect(getGlobalTetrominoLocation(I_type, 0, 1, defaulPIvot)).toEqual(I_type);
+        expect(getGlobalTetrominoLocation(I_type, 0, 2, defaulPIvot)).toEqual(tetrominoScaledBy_2);
+        expect(getGlobalTetrominoLocation(I_type, 180, 1, defaulPIvot)).toEqual(tetrominoMovedOneUp);
+        expect(getGlobalTetrominoLocation(I_type, 0, 1, movedPivotRight)).toEqual(tetrominoMovedByOneRight);
     });
 });
 
 describe("Tetromino vertices coordinates", () => {
     test('Right data format', () => {
-        expect.anything(getGlobalTetrominoVertices(I_tetromino, 0, 1, defaulPIvot));
+        expect.anything(getGlobalTetrominoVertices(I_type, 0, 1, defaulPIvot));
         expect(
-            getGlobalTetrominoVertices(I_tetromino, 0, 1, defaulPIvot).length === 4
+            getGlobalTetrominoVertices(I_type, 0, 1, defaulPIvot).length === 4
         ).toBeTruthy();
         expect(
-            getGlobalTetrominoVertices(I_tetromino, 0, 1, defaulPIvot).map(
+            getGlobalTetrominoVertices(I_type, 0, 1, defaulPIvot).map(
                 item => item.length === 4
         )).toBeTruthy();
         expect(
-            getGlobalTetrominoVertices(I_tetromino, 0, 1, defaulPIvot).map(
+            getGlobalTetrominoVertices(I_type, 0, 1, defaulPIvot).map(
                 item => isPoint(item)
         )).toBeTruthy();
     });
