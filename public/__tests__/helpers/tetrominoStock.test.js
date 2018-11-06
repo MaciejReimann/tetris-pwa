@@ -1,4 +1,4 @@
-const tetrominoStock = require('../../scripts/helpers/tetrominoCreation');
+const tetrominoStock = require('../../scripts/helpers/tetrominoStock');
 const { clone } = require('../../scripts/helpers/arrayHelpers');
 
 describe('', () => {

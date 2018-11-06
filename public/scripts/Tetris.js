@@ -11,7 +11,7 @@ const {
     rotatePointOnGlobalZero 
 } = require('./helpers/pointHelpers');
 
-const tetrominoStock = require('./helpers/tetrominoCreation');
+const tetrominoStock = require('./helpers/tetrominoStock');
 
 const {
     getGlobalTetrominoLocation,

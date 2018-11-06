@@ -15,7 +15,7 @@ const {
     addTwoPoints,
 } = require('../../scripts/helpers/pointHelpers');
 
-const tetrominoStock = require('../../scripts/helpers/tetrominoCreation');
+const tetrominoStock = require('../../scripts/helpers/tetrominoStock');
 const I_tetromino = tetrominoStock.build(1,1)[0];
 
 const defaulPIvot = { x: 0, y: 0 };
