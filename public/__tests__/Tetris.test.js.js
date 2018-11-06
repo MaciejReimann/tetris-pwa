@@ -78,21 +78,20 @@ describe("Starting game", () => {
     // });
 });
 
-describe("Pivot position after next step", () => {
+describe("Pivot position changed after each step, tetromino laying flat", () => {
     const { width, height, tempo, step, startPoint, stockLength } = defaultBoard;
     beforeEach(() => {
         tetris.init(width, height, tempo, step, stockLength);
     });
     
-    test("Pivot moved down n-times moves by n * step (first round), pivotBottomDist=2", () => {
-        let pivotBottomDist = 1;       
+    test("Pivot moved down n-times moves by n * step (first round)", () => {
         let moveCounter = 1;
-        tetris.overrideToTest(3, pivotBottomDist);
+        tetris.start();
         expect(tetris.getState().pivotLocation).toEqual(startPoint);
         while (true) {
             const movedPivot = {x: width / 2, y: moveCounter * step};
             tetris.nextStep();           
-            if(moveCounter === height - pivotBottomDist + 1) {
+            if(moveCounter === height) {
                 expect(tetris.getState().pivotLocation).toEqual(startPoint);
                 break;
             };
