@@ -50,7 +50,7 @@ describe("Starting game", () => {
         expect(tetris.getState().gameStarted).toBeTruthy();
         expect(tetris.getState().gameIsOver).toBeFalsy();
     });
-    test("On start, first tetromino took from stock and stock replenished", () => {
+    test("First tetromino took from stock and stock replenished", () => {
         // It has to be cloned, otherwise only the reference is stored and 
         // not the actual array;
         const stockBeforeStart = clone( tetris.getState().tetrominoStock );
@@ -59,23 +59,22 @@ describe("Starting game", () => {
         expect(tetris.getState().tetrominoStock[0]).toEqual(stockBeforeStart[1]);
         expect(tetris.getState().tetrominoStock[1]).toEqual(stockBeforeStart[2]);
     });
-    // test("Pivot location dropped down one step per tempo", () => {
-    //     jest.useFakeTimers();
-    //     let moveCounter = 1;
-    //     tetris.start();
-
-    //     while (true) {
-    //         const movedPivot = {x: width / 2, y: moveCounter * step};
-    //         jest.advanceTimersByTime(tempo);
-    //         moveCounter ++;
-    //         if(moveCounter === height) {
-    //             expect(tetris.getState().pivotLocation).toEqual(startPoint);
-    //             jest.clearAllTimers()
-    //             break;
-    //         };
-    //         expect(tetris.getState().pivotLocation).toEqual(movedPivot);            
-    //     };
-    // });
+    test("Nextstep() fired at given interval", () => {
+        jest.useFakeTimers();
+        let moveCounter = 1;
+        tetris.start();
+        while (true) {
+            const movedPivot = {x: width / 2, y: moveCounter * step};
+            jest.advanceTimersByTime(tempo);
+            if(moveCounter === height) {
+                expect(tetris.getState().pivotLocation).toEqual(startPoint);
+                jest.clearAllTimers()
+                break;
+            };
+            moveCounter ++;
+            expect(tetris.getState().pivotLocation).toEqual(movedPivot);            
+        };
+    });
 });
 
 describe("Pivot position changed after each step, tetromino laying flat", () => {
