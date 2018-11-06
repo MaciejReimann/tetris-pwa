@@ -16,7 +16,7 @@ const {
 } = require('../../scripts/helpers/pointHelpers');
 
 const tetrominoStock = require('../../scripts/helpers/tetrominoCreation');
-const I_tetromino = tetrominoStock.allTetrominos[1];
+const I_tetromino = tetrominoStock.build(1,1)[0];
 
 const defaulPIvot = { x: 0, y: 0 };
 const movedPivotRight = { x: 1, y: 0 };

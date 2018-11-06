@@ -7,55 +7,77 @@ const {
 
 
 // PRIVATE VARIABLES
-
 // Tetromino defined as their 4 squares' center points
 // in relation to their local zero called pivot;
-const T_tetromino = [
-    { x: -0.5, y: 0.5 },
-    { x: 0.5, y: 0.5 },
-    { x: 0.5, y: 1.5 },
-    { x: 1.5, y: 0.5 }
+const _I = [
+  { x: -1.5, y:  0.5 },
+  { x: -0.5, y:  0.5 },
+  { x:  0.5, y:  0.5 },
+  { x:  1.5, y:  0.5 }
 ];
-
-const I_tetromino = [
-  { x: -1.5, y: 0.5 },
-  { x: -0.5, y: 0.5 },
-  { x: 0.5, y: 0.5 },
-  { x: 1.5, y: 0.5 }
-];
-
-const C_tetromino = [
+const _J = [
+  { x: -1.5, y: -0.5 },
   { x: -0.5, y: -0.5 },
-  { x: 0.5, y: -0.5 },
-  { x: 0.5, y: 0.5 },
-  { x: -0.5, y: 0.5 }
+  { x:  0.5, y: -0.5 },
+  { x:  0.5, y:  0.5 }
+];
+const _L = [
+  { x: -0.5, y:  0.5 },
+  { x: -0.5, y: -0.5 },
+  { x:  0.5, y: -0.5 },
+  { x:  1.5, y: -0.5 }
+];
+const _O = [
+  { x: -0.5, y: -0.5 },
+  { x:  0.5, y: -0.5 },
+  { x:  0.5, y:  0.5 },
+  { x: -0.5, y:  0.5 }
+];
+const _S = [
+  { x: -0.5, y:  0.5 },
+  { x:  0.5, y:  0.5 },
+  { x:  0.5, y: -0.5 },
+  { x:  1.5, y: -0.5 }
+];
+const _T = [
+  { x: -0.5, y: 0.5 },
+  { x:  0.5, y: 0.5 },
+  { x:  0.5, y: 1.5 },
+  { x:  1.5, y: 0.5 }
+];
+const _Z = [
+  { x: -0.5, y: -0.5 },
+  { x:  0.5, y: -0.5 },
+  { x:  0.5, y:  0.5 },
+  { x:  1.5, y:  0.5 }
 ];
 
-// const allTetrominos = [T_tetromino, T_tetromino, T_tetromino];
-
-const allTetrominos = [T_tetromino, I_tetromino, C_tetromino];
-const tetrominosHeight_1 = [];
-const tetrominosHeight_2 = [];
-const tetrominosHeight_3 = [];
-
-// const allTetrominos = ['T_tetromino', 'I_tetromino', 'C_tetromino'];
+const allTetrominos = [_I, _J, _L, _O, _S, _T, _Z];
+const tetrominosHeight_1 = allTetrominos[0];
+const tetrominosHeight_2 = allTetrominos.slice(1, allTetrominos.length);
 
 let currentStock = [];
 
 // PRIVATE METHODS
 
-function _getRandomTetromino() {
-  return getRandomArrayItem(allTetrominos);
+function _getRandomTetromino(height) {
+  if(height === 1) {
+    return tetrominosHeight_1;
+  } else if(height === 2) {
+    return getRandomArrayItem(tetrominosHeight_2);
+  } else {
+    return getRandomArrayItem(allTetrominos);
+  };
 }; 
 
 // PUBLIC METHODS
 
-function setTetrominoHeight(length, height) {
-  currentStock = Array(length).fill(I_tetromino);
-}
-
-function build(length) {
-  currentStock = createAndPopulateArray(length, _getRandomTetromino);
+function build(length, height) {
+  if(!height) {
+    currentStock = createAndPopulateArray(length, _getRandomTetromino);
+  } else {
+    currentStock = createAndPopulateArray(length, () =>_getRandomTetromino(height));
+  };
   return currentStock;
 };
 
@@ -69,8 +91,6 @@ function getFirstAndReplenish() {
 };
 
 module.exports = {
-  setTetrominoHeight,
-  setTetrominoType,
   allTetrominos, 
   build,
   getCurrent,
