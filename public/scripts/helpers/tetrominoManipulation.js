@@ -27,7 +27,7 @@ function positionTetromino(tetromino, pivotLocation, ) {
 };
 
 // Here we get the global position of tetromino's square centers;
-function getGlobalTetrominoLocation(tetromino, angle, scale, pivotLocation) {
+function getGlobalTetrominoCenters(tetromino, angle, scale, pivotLocation) {
     return (
         positionTetromino( 
             scaleTetromino( 
@@ -41,13 +41,13 @@ function getGlobalTetrominoLocation(tetromino, angle, scale, pivotLocation) {
 // And finally we receive the global position of eqch if it's square's vertices
 // in the form of array of four array of four point objects each;
 function getGlobalTetrominoVertices(tetromino, angle, scale, pivotLocation) {
-    return getGlobalTetrominoLocation(tetromino, angle, scale, pivotLocation)
+    return getGlobalTetrominoCenters(tetromino, angle, scale, pivotLocation)
         .map(squareCenter => getParallelSquareVertices(angle, squareCenter, scale) );
 }
 
 // Publicly accessed 
 module.exports = {
-    getGlobalTetrominoLocation,
+    getGlobalTetrominoCenters,
     getGlobalTetrominoVertices
 };
 
@@ -57,7 +57,7 @@ module.exports.test = {
     rotateTetromino,
     scaleTetromino,
     positionTetromino,
-    getGlobalTetrominoLocation,
+    getGlobalTetrominoCenters,
     getGlobalTetrominoVertices
 };
 

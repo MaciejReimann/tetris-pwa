@@ -4,7 +4,7 @@ const {
     positionTetromino,
 } = require('../../scripts/helpers/tetrominoManipulation').test;
 const {
-    getGlobalTetrominoLocation,
+    getGlobalTetrominoCenters,
     getGlobalTetrominoVertices
 } = require('../../scripts/helpers/tetrominoManipulation');
 
@@ -51,11 +51,11 @@ describe("Tetromino manipulation", () => {
         expect(positionTetromino(I_type, movedPivotLeft)).toEqual(tetrominoMovedByOneLeft);
     });
     test('Position after manipulation', () => {
-        expect(getGlobalTetrominoLocation(I_type, 360, 1, defaulPIvot)).toEqual(I_type);
-        expect(getGlobalTetrominoLocation(I_type, 0, 1, defaulPIvot)).toEqual(I_type);
-        expect(getGlobalTetrominoLocation(I_type, 0, 2, defaulPIvot)).toEqual(tetrominoScaledBy_2);
-        expect(getGlobalTetrominoLocation(I_type, 180, 1, defaulPIvot)).toEqual(tetrominoMovedOneUp);
-        expect(getGlobalTetrominoLocation(I_type, 0, 1, movedPivotRight)).toEqual(tetrominoMovedByOneRight);
+        expect(getGlobalTetrominoCenters(I_type, 360, 1, defaulPIvot)).toEqual(I_type);
+        expect(getGlobalTetrominoCenters(I_type, 0, 1, defaulPIvot)).toEqual(I_type);
+        expect(getGlobalTetrominoCenters(I_type, 0, 2, defaulPIvot)).toEqual(tetrominoScaledBy_2);
+        expect(getGlobalTetrominoCenters(I_type, 180, 1, defaulPIvot)).toEqual(tetrominoMovedOneUp);
+        expect(getGlobalTetrominoCenters(I_type, 0, 1, movedPivotRight)).toEqual(tetrominoMovedByOneRight);
     });
 });
 
