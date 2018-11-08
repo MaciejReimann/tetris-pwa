@@ -4,6 +4,8 @@ const {
     addTwoPoints,
     multiplyPoint,
     arePointsEqual,
+    isPointWithinXRange,
+    isPointWithinYRange,
     translatePointToPolar,
     translatePointToCartesian,
     rotatePointOnGlobalZero
@@ -67,6 +69,13 @@ test("Two points are equal", () => {
     expect(arePointsEqual( pointOne, { x: 1, y: 1 } )).toBeTruthy();
     expect(arePointsEqual( pointTwo, { x: 2, y: 2, z: 0 } )).toBeTruthy();
 });
+
+test("Points are in range", () => {
+    expect(isPointWithinXRange(pointZero, -1, 1)).toBeTruthy()
+    expect(isPointWithinYRange(pointZero, -1, 1)).toBeTruthy()
+    expect(isPointWithinXRange(pointTwo,  -1, 1)).toBeFalsy()
+    expect(isPointWithinYRange(pointTwo,  -1, 1)).toBeFalsy()
+})
 
 test("Translate a point to polar coordinates", () => {
     expect(translatePointToPolar( pointOne, 0 )).toEqual({

@@ -37,6 +37,14 @@ function arePointsEqual(point1, point2) {
     return point1.x === point2.x && point1.y === point2.y;
 };
 
+function isPointWithinXRange(point, start, end) {
+    return point.x > start && point.x < end; 
+};
+
+function isPointWithinYRange(point, start, end) {
+    return point.y > start && point.y < end; 
+};
+
 function translatePointToPolar(point, angle) {
     return {
         r: Math.sqrt(Math.pow(point.x, 2) + Math.pow(point.y, 2)),
@@ -65,6 +73,8 @@ module.exports = {
     addTwoPoints,
     multiplyPoint,
     arePointsEqual,
+    isPointWithinXRange,
+    isPointWithinYRange,
     translatePointToPolar,
     translatePointToCartesian,
     rotatePointOnGlobalZero
