@@ -1,7 +1,13 @@
 //Testing tetris API
 const tetris = require('../scripts/Tetris');
 const { clone } = require('../scripts/helpers/arrayHelpers');
-const { movePointOnY } = require('../scripts/helpers/pointHelpers');
+const { 
+    movePointOnY,
+    movePointOnX
+ } = require('../scripts/helpers/pointHelpers');
+ const { 
+    getGlobalTetrominoVertices
+ } = require('../scripts/helpers/tetrominoManipulation');
 const setInitialState = require('../scripts/helpers/setInitialState');
 
 // Board default setup constants
@@ -21,7 +27,7 @@ test("", () => {
 describe("First moves and turns", () => {    
     const { width, height, tempo, pixel, startPoint, stockLength } = defaultBoard; 
     const initialState = setInitialState(width, height, pixel, tempo, stockLength);
-    
+
     test("Game state after first move down", () => {
         gameState = tetris(initialState, 'MOVE DOWN');
         expect(gameState.width).toBe(width * pixel);
@@ -32,7 +38,52 @@ describe("First moves and turns", () => {
         expect(gameState.stock.length).toBe(stockLength);
         expect(gameState.pivot).toEqual(movePointOnY(startPoint, pixel));        
         expect(gameState.angle).toBe(0);
-        expect(gameState.squares).toEqual([]);        
+        expect(gameState.squares).toEqual([]); 
+        expect(gameState.vertices).toEqual(
+            getGlobalTetrominoVertices(
+                gameState.type,
+                gameState.angle,
+                gameState.pixel,
+                gameState.pivot
+        ));          
+    });
+    test("Game state after first move right", () => {
+        gameState = tetris(initialState, 'MOVE RIGHT');
+        expect(gameState.width).toBe(width * pixel);
+        expect(gameState.height).toBe(height * pixel);
+        expect(gameState.pixel).toBe(pixel);       
+        expect(gameState.start).toEqual(startPoint);
+        expect(gameState.gameIsOver).toBeFalsy();
+        expect(gameState.stock.length).toBe(stockLength);
+        expect(gameState.pivot).toEqual(movePointOnX(startPoint, pixel));        
+        expect(gameState.angle).toBe(0);
+        expect(gameState.squares).toEqual([]);
+        expect(gameState.vertices).toEqual(
+            getGlobalTetrominoVertices(
+                gameState.type,
+                gameState.angle,
+                gameState.pixel,
+                gameState.pivot
+        ));          
+    });
+    test("Game state after first move left", () => {
+        gameState = tetris(initialState, 'MOVE LEFT');
+        expect(gameState.width).toBe(width * pixel);
+        expect(gameState.height).toBe(height * pixel);
+        expect(gameState.pixel).toBe(pixel);       
+        expect(gameState.start).toEqual(startPoint);
+        expect(gameState.gameIsOver).toBeFalsy();
+        expect(gameState.stock.length).toBe(stockLength);
+        expect(gameState.pivot).toEqual(movePointOnX(startPoint, -pixel));        
+        expect(gameState.angle).toBe(0);
+        expect(gameState.squares).toEqual([]);
+        expect(gameState.vertices).toEqual(
+            getGlobalTetrominoVertices(
+                gameState.type,
+                gameState.angle,
+                gameState.pixel,
+                gameState.pivot
+        ));          
     });
 });
 
