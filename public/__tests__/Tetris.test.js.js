@@ -13,41 +13,41 @@ const defaultBoard = {
     startPoint: {x: 5, y: 0},
     stockLength: 3
 };
+test("", () => {
+    expect(2).toBe(2)
+})
 
-describe("Game state on initialize", () => {    
+
+describe("First moves and turns", () => {    
     const { width, height, tempo, pixel, startPoint, stockLength } = defaultBoard; 
-    let gameState;
-    beforeEach(() => {        
-        const initialState = setInitialState(width, height, pixel, tempo, stockLength);
-        gameState = tetris(initialState, "START");
-    });    
-    test("Board setup", () => {
+    const initialState = setInitialState(width, height, pixel, tempo, stockLength);
+    
+    test("Game state after first move down", () => {
+        gameState = tetris(initialState, 'MOVE DOWN');
         expect(gameState.width).toBe(width * pixel);
         expect(gameState.height).toBe(height * pixel);
-        expect(gameState.pixel).toBe(pixel);
-        expect(gameState.tempo).toBe(tempo);        
+        expect(gameState.pixel).toBe(pixel);       
         expect(gameState.start).toEqual(startPoint);
         expect(gameState.gameIsOver).toBeFalsy();
         expect(gameState.stock.length).toBe(stockLength);
-        expect(gameState.pivot).toEqual(startPoint);
-        
+        expect(gameState.pivot).toEqual(movePointOnY(startPoint, pixel));        
         expect(gameState.angle).toBe(0);
         expect(gameState.squares).toEqual([]);        
     });
 });
 
-describe("Game state on move down", () => {    
-    const { width, height, tempo, pixel, startPoint, stockLength } = defaultBoard; 
-    let gameState;
-    beforeEach(() => {        
-        const initialState = setInitialState(width, height, pixel, tempo, stockLength);
-        gameState = tetris(initialState, "START");
-    });    
-    test("Move down", () => {
-        gameState = tetris(gameState, "MOVE DOWN");
-        expect(gameState.pivot).toEqual(movePointOnY(startPoint, pixel))
-    });
-});
+// describe("Game state on move down", () => {    
+//     const { width, height, tempo, pixel, startPoint, stockLength } = defaultBoard; 
+//     let gameState;
+//     beforeEach(() => {        
+//         const initialState = setInitialState(width, height, pixel, tempo, stockLength);
+//         gameState = tetris(initialState, "START");
+//     });    
+//     test("Move down", () => {
+//         gameState = tetris(gameState, "MOVE DOWN");
+//         expect(gameState.pivot).toEqual(movePointOnY(startPoint, pixel))
+//     });
+// });
 
 // describe("Starting game", () => {
 //     const { width, height, tempo, step, startPoint, stockLength } = defaultBoard;

@@ -18,7 +18,7 @@ function setInitialState(width, height, pixel, tempo, stockLength) {
 
         // a reference point for all tetromino calculations, after it is moved, 
         // tetrominoSquares are recalculated;
-        pivot: createPoint(width / 2, 0),
+
 
         // falling tetromino local square centers, i.e. its definition, 
         // first time assigned a value on start(), keeps the valuea untill 
