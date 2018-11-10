@@ -85,6 +85,46 @@ describe("First moves and turns", () => {
                 gameState.pivot
         ));          
     });
+    test("Game state after first move down and turn left", () => {
+        gameState = tetris(initialState, 'MOVE DOWN');
+        gameState = tetris(gameState, 'TURN LEFT');
+        expect(gameState.width).toBe(width * pixel);
+        expect(gameState.height).toBe(height * pixel);
+        expect(gameState.pixel).toBe(pixel);       
+        expect(gameState.start).toEqual(startPoint);
+        expect(gameState.gameIsOver).toBeFalsy();
+        expect(gameState.stock.length).toBe(stockLength);
+        expect(gameState.pivot).toEqual(movePointOnY(startPoint, pixel));        
+        expect(gameState.angle).toBe(-90);
+        expect(gameState.squares).toEqual([]);
+        expect(gameState.vertices).toEqual(
+            getGlobalTetrominoVertices(
+                gameState.type,
+                gameState.angle,
+                gameState.pixel,
+                gameState.pivot
+        ));          
+    });
+    test("Game state after first move down and turn right", () => {
+        gameState = tetris(initialState, 'MOVE DOWN');
+        gameState = tetris(gameState, 'TURN RIGHT');
+        expect(gameState.width).toBe(width * pixel);
+        expect(gameState.height).toBe(height * pixel);
+        expect(gameState.pixel).toBe(pixel);       
+        expect(gameState.start).toEqual(startPoint);
+        expect(gameState.gameIsOver).toBeFalsy();
+        expect(gameState.stock.length).toBe(stockLength);
+        expect(gameState.pivot).toEqual(movePointOnY(startPoint, pixel));        
+        expect(gameState.angle).toBe(90);
+        expect(gameState.squares).toEqual([]);
+        expect(gameState.vertices).toEqual(
+            getGlobalTetrominoVertices(
+                gameState.type,
+                gameState.angle,
+                gameState.pixel,
+                gameState.pivot
+        ));          
+    });
 });
 
 // describe("Game state on move down", () => {    
