@@ -6,33 +6,33 @@ describe('', () => {
         const max = 1000;
         let counter = 0;
         while (counter < max) {
-            const stock = tetrominoStock.build(counter);
-            expect(stock.length).toBe(counter);
+            const stock = tetrominoStock(counter);
+            expect(stock.getCurrent().length).toBe(counter);
             counter ++;
         };        
     });
     test("Get n times the n-th element and see if they're equal", () => {  
         const n = 1000;
-        const stock = tetrominoStock.build(n);
-        const originalStock = clone(stock);        
+        const stock = tetrominoStock(n);
+        const originalStock = clone(stock.getCurrent());       
         let counter = 0;
         while (counter < n) {
-            expect(tetrominoStock.getFirstAndReplenish()).toEqual(originalStock[counter]);
+            expect(stock.getFirstAndReplenish()).toEqual(originalStock[counter]);
             counter ++;
         };
     });
-    test("Accessing the stock", () => {  
-        const stock = tetrominoStock.build(3);
-        const originalStock = clone(stock);
+    test("Accessing the stock", () => {
+        const stock = tetrominoStock(3);
+        const originalStock = clone(stock.getCurrent());
         // before doing anything
-        expect(tetrominoStock.getCurrent()).toEqual(stock);
-        expect(tetrominoStock.getCurrent()[0]).toEqual(originalStock[0]);        
-        // first time
-        expect(tetrominoStock.getFirstAndReplenish()).toEqual(originalStock[0]);
+        expect(stock.getCurrent()).toEqual(originalStock);
+        expect(stock.getCurrent()[0]).toEqual(originalStock[0]);        
+        //first time
+        expect(stock.getFirstAndReplenish()).toEqual(originalStock[0]);
         // second time
-        expect(tetrominoStock.getFirstAndReplenish()).toEqual(originalStock[1]);
+        expect(stock.getFirstAndReplenish()).toEqual(originalStock[1]);
         // third time
-        expect(tetrominoStock.getCurrent()[0]).toEqual(originalStock[stock.length - 1])
-        expect(tetrominoStock.getFirstAndReplenish()).toEqual(originalStock[2]);
+        expect(stock.getCurrent()[0]).toEqual(originalStock[stock.getCurrent().length - 1]);
+        expect(stock.getFirstAndReplenish()).toEqual(originalStock[2]);
     });
 })

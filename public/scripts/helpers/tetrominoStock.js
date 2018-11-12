@@ -5,44 +5,30 @@ const {
 } = require('./arrayHelpers');
 const tetrominoTypes = require('./tetrominoTypes');
 
-// PRIVATE VARIABLE
-let currentStock = [];
+module.exports = function tetrominoStock(length,height) {
+  let currentStock = height 
+    ? createAndPopulateArray(length, () =>_getRandomTetromino(height))
+    : createAndPopulateArray(length, _getRandomTetromino);
 
-// PRIVATE METHODS
-function _getRandomTetromino(height) {
-  if(height === 1) {
-    return tetrominoTypes[0];
-  } else if(height === 2) {
-    return getRandomArrayItem(
-      tetrominoTypes.slice(1, tetrominoTypes.length)
-    );
-  } else {
-    return getRandomArrayItem(tetrominoTypes);
+  function _getRandomTetromino(height) {
+    if(height === 1) {
+      return tetrominoTypes[0];
+    } else if(height === 2) {
+      return getRandomArrayItem(
+        tetrominoTypes.slice(1, tetrominoTypes.length)
+      );
+    } else {
+      return getRandomArrayItem(tetrominoTypes);
+    };
   };
-}; 
 
-// PUBLIC METHODS
-function build(length, height) {
-  if(!height) {
-    currentStock = createAndPopulateArray(length, _getRandomTetromino);
-  } else {
-    currentStock = createAndPopulateArray(length, () =>_getRandomTetromino(height));
+  function getCurrent() {
+    return currentStock;
   };
-  return currentStock;
-};
-
-function getCurrent() {
-  return currentStock;
-};
-
-function getFirstAndReplenish() {
-  currentStock.push(_getRandomTetromino());
-  return currentStock.shift();
-};
-
-module.exports = {
-  tetrominoTypes, 
-  build,
-  getCurrent,
-  getFirstAndReplenish,
+  function getFirstAndReplenish() {
+    currentStock.push(_getRandomTetromino());
+    return currentStock.shift();
+  };
+  
+  return { getCurrent, getFirstAndReplenish }
 };
