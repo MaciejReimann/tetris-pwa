@@ -8,7 +8,7 @@ const {
  const { 
     getGlobalTetrominoVertices
  } = require('../scripts/helpers/tetrominoManipulation');
-const setInitialState = require('../scripts/helpers/setInitialState');
+const setupGameboard = require('../scripts/helpers/setupGameboard');
 
 // Board default setup constants
 const defaultBoard = {
@@ -26,7 +26,7 @@ test("", () => {
 
 describe("First moves and turns", () => {    
     const { width, height, tempo, pixel, startPoint, stockLength } = defaultBoard; 
-    const initialState = setInitialState(width, height, pixel, tempo, stockLength);
+    const initialState = setupGameboard(width, height, pixel, tempo, stockLength);
 
     // test("First tetromino took from stock and stock replenished", () => {
     //     // It has to be cloned, otherwise only the reference is stored and 
@@ -45,7 +45,7 @@ describe("First moves and turns", () => {
         expect(gameState.pixel).toBe(pixel);       
         expect(gameState.start).toEqual(startPoint);
         expect(gameState.gameIsOver).toBeFalsy();
-        // expect(gameState.stock.length).toBe(stockLength);
+        expect(gameState.stock.getCurrent().length).toBe(stockLength);
         expect(gameState.pivot).toEqual(movePointOnY(startPoint, pixel));        
         expect(gameState.angle).toBe(0);
         expect(gameState.squares).toEqual([]);

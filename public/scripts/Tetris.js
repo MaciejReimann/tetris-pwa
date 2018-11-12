@@ -26,11 +26,9 @@ function Tetris(prevState, action) {
     let nextType = prevState.type
         ? prevState.type 
         : prevState.stock.getFirstAndReplenish();
-    // let nextStock = prevState.stock
-    //     ? prevState.stock 
-    //     : prevState.stock.getCurrent();
     let nextPivot = prevState.pivot ? prevState.pivot : start;
-    let nextAngle = prevState.angle ? prevState.angle : 0;    
+    let nextAngle = prevState.angle ? prevState.angle : 0;
+    let nextSquares = prevState.squares ? prevState.squares : [];    
 
     // since its pure function, no need for object initialization
     if(action === 'MOVE DOWN') {
@@ -57,9 +55,10 @@ function Tetris(prevState, action) {
     };
 
     if(moveIsAllowed(nextCenters)) {
+        nextState.type  = nextType;
         nextState.pivot = nextPivot;
         nextState.angle = nextAngle;
-        nextState.type  = nextType;
+        nextState.squares = nextSquares;        
         nextState.vertices = getGlobalTetrominoVertices(
             nextType.centers, nextAngle, pixel, nextPivot
         );
