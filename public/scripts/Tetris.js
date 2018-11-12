@@ -12,8 +12,6 @@ const {
     rotatePointOnGlobalZero 
 } = require('./helpers/pointHelpers');
 
-const tetrominoStock = require('./helpers/tetrominoStock');
-
 const {
     getGlobalTetrominoCenters,
     getGlobalTetrominoVertices
@@ -25,6 +23,12 @@ function Tetris(prevState, action) {
     } = prevState;
     let nextState = {};
     let nextCenters;
+    let nextType = prevState.type
+        ? prevState.type 
+        : prevState.stock.getFirstAndReplenish();
+    // let nextStock = prevState.stock
+    //     ? prevState.stock 
+    //     : prevState.stock.getCurrent();
     let nextPivot = prevState.pivot ? prevState.pivot : start;
     let nextAngle = prevState.angle ? prevState.angle : 0;    
 
@@ -39,10 +43,10 @@ function Tetris(prevState, action) {
         nextAngle = nextAngle + 90;
     } else if(action === 'TURN LEFT') {
         nextAngle = nextAngle - 90;
-    };   
+    };
 
     nextCenters = getGlobalTetrominoCenters(
-        type, nextAngle, pixel, nextPivot
+        nextType.centers, nextAngle, pixel, nextPivot
     );
 
     function moveIsAllowed(points) {
@@ -55,14 +59,16 @@ function Tetris(prevState, action) {
     if(moveIsAllowed(nextCenters)) {
         nextState.pivot = nextPivot;
         nextState.angle = nextAngle;
+        nextState.type  = nextType;
         nextState.vertices = getGlobalTetrominoVertices(
-            type, nextAngle, pixel, nextPivot
+            nextType.centers, nextAngle, pixel, nextPivot
         );
     } else if(action === 'MOVE DOWN') {
         pivot.y === start.y 
             ? nextState.gameIsOver = true 
             : nextState.pivot = start
-        nextState.type = tetrominoStock.getFirstAndReplenish();
+        // nextState.stock = nextStock.getFirstAndReplenish();
+        // nextState.type = tetrominoStock.getFirstAndReplenish();
     };
 
     return Object.assign({}, prevState, nextState);
