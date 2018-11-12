@@ -18,9 +18,7 @@ const {
 } = require('./helpers/tetrominoManipulation');
 
 function Tetris(prevState, action) {
-    const {
-        width, height, pixel, start, type, angle, score
-    } = prevState;
+    const { width, height, pixel, start, stock, score } = prevState;
     let nextState = {};
     let nextCenters;
     let nextType = prevState.type
@@ -55,19 +53,28 @@ function Tetris(prevState, action) {
     };
 
     if(moveIsAllowed(nextCenters)) {
-        nextState.type  = nextType;
-        nextState.pivot = nextPivot;
-        nextState.angle = nextAngle;
-        nextState.squares = nextSquares;        
+        nextState.type     = nextType;
+        nextState.pivot    = nextPivot;
+        nextState.angle    = nextAngle;
+        nextState.squares  = nextSquares;        
         nextState.vertices = getGlobalTetrominoVertices(
             nextType.centers, nextAngle, pixel, nextPivot
         );
     } else if(action === 'MOVE DOWN') {
-        pivot.y === start.y 
-            ? nextState.gameIsOver = true 
-            : nextState.pivot = start
-        // nextState.stock = nextStock.getFirstAndReplenish();
-        // nextState.type = tetrominoStock.getFirstAndReplenish();
+        if(nextPivot.y === start.y) {
+            nextState.gameIsOver = true
+        } else {
+            nextState.squares = nextSquares.concat(
+                getGlobalTetrominoCenters(
+                    prevState.type.centers, 
+                    prevState.angle, 
+                    pixel, 
+                    prevState.pivot
+                )
+            );
+            nextState.pivot   = start;
+            nextState.type    = stock.getFirstAndReplenish();
+        }
     };
 
     return Object.assign({}, prevState, nextState);

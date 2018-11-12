@@ -6,6 +6,7 @@ const {
     movePointOnX
  } = require('../scripts/helpers/pointHelpers');
  const { 
+    getGlobalTetrominoCenters,
     getGlobalTetrominoVertices
  } = require('../scripts/helpers/tetrominoManipulation');
 const setupGameboard = require('../scripts/helpers/setupGameboard');
@@ -55,7 +56,6 @@ describe("First moves and turns", () => {
     test("Game state after first move down and right", () => {
         let gameState = tetris(initialState, 'MOVE DOWN');
         gameState = tetris(gameState, 'MOVE RIGHT');
-        console.log(gameState.pivot)
         expect(gameState.width).toBe(width * pixel);
         expect(gameState.height).toBe(height * pixel);
         expect(gameState.pixel).toBe(pixel);       
@@ -190,90 +190,96 @@ describe("First moves and turns", () => {
     });
 });
 
+describe("Moves down by one pixel, goes back to start when hits the bottom", () => {
+    const { width, height, tempo, pixel, startPoint, stockLength } = defaultBoard; 
 
-// describe("Starting game", () => {
-//     const { width, height, tempo, step, startPoint, stockLength } = defaultBoard;
-//     beforeEach(() => {
-//         tetris.init(width, height, tempo, step, stockLength);
-//     });
+    test("Tetris height = 1", () => {
+        const initialState = setupGameboard(width, height, pixel, tempo, stockLength, 1);     
+        let moveCounter = 1;
+        let gameState = tetris(initialState, 'MOVE DOWN');
+        while (true) {
+            moveCounter ++;
+            const movedPivot = {x: width / 2, y: moveCounter * pixel};
+            gameState = tetris(gameState, 'MOVE DOWN');
+            if(moveCounter === height) {
+                expect(gameState.pivot).toEqual(startPoint);
+                break;
+            };
+            expect(gameState.pivot).toEqual(movedPivot);            
+        };
+    });
+});
 
-//     test("Game status before and after start", () => {
-//         expect(tetris.getState().gameStarted).toBeFalsy();
-//         expect(tetris.getState().gameIsOver).toBeFalsy();
-//         tetris.start();
-//         expect(tetris.getState().gameStarted).toBeTruthy();
-//         expect(tetris.getState().gameIsOver).toBeFalsy();
-//     });
+describe("What happens when tetromino hits the bottom for the first time", () => {
+    const { width, height, tempo, pixel, startPoint, stockLength } = defaultBoard;
 
-//     test("Nextstep() fired at given interval", () => {
-//         jest.useFakeTimers();
-//         let moveCounter = 1;
-//         tetris.start();
-//         while (true) {
-//             const movedPivot = {x: width / 2, y: moveCounter * step};
-//             jest.advanceTimersByTime(tempo);
-//             if(moveCounter === height) {
-//                 expect(tetris.getState().pivotLocation).toEqual(startPoint);
-//                 jest.clearAllTimers()
-//                 break;
-//             };
-//             moveCounter ++;
-//             expect(tetris.getState().pivotLocation).toEqual(movedPivot);            
-//         };
-//     });
-// });
+    test("First tetromino took from stock and stock replenished", () => {
+        const initialState = setupGameboard(width, height, pixel, tempo, stockLength);
+        let gameState = tetris(initialState, 'MOVE DOWN');
+        const stockJustAfterStart = clone( gameState.stock.getCurrent() );
+        let moveCounter = 1;
+        while (true) {
+            moveCounter ++;
+            gameState = tetris(gameState, 'MOVE DOWN');
+            if(moveCounter === height) {
+                expect(gameState.type).toEqual(stockJustAfterStart[0]);
+                expect(gameState.stock.getCurrent()[0]).toEqual(stockJustAfterStart[1]);
+                expect(gameState.stock.getCurrent()[1]).toEqual(stockJustAfterStart[2]);
+                break;
+            };
+            expect(gameState.stock.getCurrent()[0]).toEqual(stockJustAfterStart[0]);
+            expect(gameState.stock.getCurrent()[1]).toEqual(stockJustAfterStart[1]);
+            expect(gameState.stock.getCurrent()[2]).toEqual(stockJustAfterStart[2]);     
+        };
+    });
+    test("First tetromino saved into gameState.squares", () => {
+        const initialState = setupGameboard(width, height, pixel, tempo, stockLength);
+        let gameState = tetris(initialState, 'MOVE DOWN');
+        const firstTetrominoName = clone( gameState.type.name );
+        let moveCounter = 1;
+        let type, angle, pivot;
+        while (true) {
+            moveCounter ++;
+            gameState = tetris(gameState, 'MOVE DOWN');            
+            if(moveCounter === height - pixel) {
+                type  = gameState.type;
+                angle = gameState.angle;
+                pivot = gameState.pivot;
+            }
+            if(moveCounter === height) {
+                expect(gameState.squares.length).toBe(4);
+                expect(gameState.squares).toEqual(
+                    getGlobalTetrominoCenters(type.centers, angle, pixel, pivot)
+                );
+                break;
+            };
+            expect(gameState.type.name).toEqual(firstTetrominoName);            
+        };
+    });
+});
 
-// describe("Pivot location changes, tetromino laying flat", () => {
-//     const { width, height, tempo, step, startPoint, stockLength } = defaultBoard;
-//     beforeEach(() => {
-//         tetris.init(width, height, tempo, step, stockLength);
-//     });
-//     test("1st round: moving down one time moves it by one", () => {
-//         tetris.start();
-//         expect(tetris.getState().pivotLocation).toEqual(startPoint);
-//         tetris.nextStep(); 
-//         expect(tetris.getState().pivotLocation).toEqual(movePointOnY(startPoint, 1));
-//         tetris.nextStep(); 
-//         expect(tetris.getState().pivotLocation).toEqual(movePointOnY(startPoint, 2));
-//     });
-    
-//     test("1st round: moving down n-times moves it by n*step, back to start when n=height", () => {
-//         let moveCounter = 1;
-//         tetris.start();
-//         expect(tetris.getState().pivotLocation).toEqual(startPoint);
-//         while (true) {
-//             const movedPivot = {x: width / 2, y: moveCounter * step};
-//             tetris.nextStep();           
-//             if(moveCounter === height) {
-//                 expect(tetris.getState().pivotLocation).toEqual(startPoint);
-//                 break;
-//             };
-//             moveCounter ++;
-//             expect(tetris.getState().pivotLocation).toEqual(movedPivot);
-//         };
-//     });
-//     test("2nd round: moving down n-times moves it by n*step, back to start when n=height", () => {
-//         let moveCounter = 1;
-//         tetris.overrideToTest(3,2);        
-//         expect(tetris.getState().pivotLocation).toEqual(startPoint);
-//         while (true) {
-//             let movedPivot = {x: width / 2, y: moveCounter * step};
-//             tetris.nextStep();
-//             // if(moveCounter === 1 * height) {
+    // test("2nd round: moving down n-times moves it by n*step, back to start when n=height", () => {
+    //     let moveCounter = 1;
+    //     tetris.overrideToTest(3,2);        
+    //     expect(tetris.getState().pivotLocation).toEqual(startPoint);
+    //     while (true) {
+    //         let movedPivot = {x: width / 2, y: moveCounter * step};
+    //         tetris.nextStep();
+    //         // if(moveCounter === 1 * height) {
                 
-//             //     expect(tetris.getState().pivotLocation).toEqual(movePointOnY(startPoint, 0));
-//             //     // break
-//             // };
-//             if(moveCounter === 1 * height - 5) {
-//                 console.log(tetris.getState())
-//                 expect(tetris.getState().pivotLocation).toEqual(movePointOnY(startPoint, 0));
-//                 break;
-//             };
-//             moveCounter ++;
-//             // expect(tetris.getState().pivotLocation).toEqual(movedPivot);
-//         };
-//     });
-// });
+    //         //     expect(tetris.getState().pivotLocation).toEqual(movePointOnY(startPoint, 0));
+    //         //     // break
+    //         // };
+    //         if(moveCounter === 1 * height - 5) {
+    //             console.log(tetris.getState())
+    //             expect(tetris.getState().pivotLocation).toEqual(movePointOnY(startPoint, 0));
+    //             break;
+    //         };
+    //         moveCounter ++;
+    //         // expect(tetris.getState().pivotLocation).toEqual(movedPivot);
+    //     };
+    // });
+
 
 // test("Pivot starts back from 0, stackedSquares increment by one", () => {
 //     const { width, height, tempo, step, stockLength } = defaultBoard; 
