@@ -1,14 +1,17 @@
-//Testing tetris API
+//Testing tetris function
 const tetris = require('../scripts/Tetris');
-const { clone } = require('../scripts/helpers/arrayHelpers');
+const { 
+    clone,
+    flattenArray
+} = require('../scripts/helpers/arrayHelpers');
 const { 
     movePointOnY,
     movePointOnX
- } = require('../scripts/helpers/pointHelpers');
+} = require('../scripts/helpers/pointHelpers');
  const { 
     getGlobalTetrominoCenters,
     getGlobalTetrominoVertices
- } = require('../scripts/helpers/tetrominoManipulation');
+} = require('../scripts/helpers/tetrominoManipulation');
 const setupGameboard = require('../scripts/helpers/setupGameboard');
 
 // Board default setup constants
@@ -20,9 +23,8 @@ const
     startPoint = {x: width * pixel / 2, y: 0},
     stockLength = 3;
 
-
 describe("First moves and turns of random tetromino", () => {    
-    for (let i = 0; i < 100; i ++) {
+    // for (let i = 0; i < 100; i ++) {
         const initialState = setupGameboard(width, height, pixel, tempo, stockLength);    
     
         test("First tetromino took from stock and stock replenished", () => {
@@ -159,7 +161,7 @@ describe("First moves and turns of random tetromino", () => {
                     gameState.pivot
             ));          
         });
-    };
+    // };
 });
 
 describe("Moves down by one pixel, goes back to start when hits the bottom", () => {
@@ -180,31 +182,50 @@ describe("Moves down by one pixel, goes back to start when hits the bottom", () 
     });
 });
 
-// describe("What happens when tetromino hits sides", () => {
-//     const { width, height, tempo, pixel, startPoint, stockLength } = defaultBoard; 
-
-//     test("Tetris height = 1 goes right", () => {
-//         const initialState = setupGameboard(width, height, pixel, tempo, stockLength, 1);     
-//         let moveCounter = 1;
-//         // Move down two times to be able to turn it vertically;
-//         let gameState = tetris(initialState, 'MOVE DOWN');
-//         gameState = tetris(gameState, 'MOVE DOWN');
-//         // Turn the I_tetromino vertically with the pivot on the right;
-//         gameState = tetris(gameState, 'TURN LEFT');
-//         let pivotLocation;
-//         while (true) {
-//             moveCounter ++;
-//             gameState = tetris(gameState, 'MOVE RIGHT');
-//             if(moveCounter === (width / pixel) - (startPoint.x / pixel)) {
-//                 pivotLocation = gameState.pivot
-//             } else if(moveCounter === width / 2 + 2) {
-//                 expect(gameState.pivot).toEqual(pivotLocation);
-//                 break;
-//             };
-//             // expect(gameState.pivot).toEqual(movedPivot);            
-//         };
-//     });
-// });
+describe("What happens when tetromino hits sides", () => {
+    test("Tetris height = 1 goes right and left", () => {
+        const initialState = setupGameboard(width, height, pixel, tempo, stockLength, 1);
+        // Move down two times to be able to turn it vertically;
+        let gameState = tetris(initialState, 'MOVE DOWN');
+        gameState = tetris(gameState, 'MOVE DOWN');
+        // Turn the I_tetromino vertically with the pivot on the right;
+        gameState = tetris(gameState, 'TURN LEFT');
+        // Test movement before hitting the right side
+        for (let i = 1; i < 100; i ++ ) {
+            gameState = tetris(gameState, 'MOVE RIGHT');
+            const allVertices = flattenArray(gameState.vertices);
+            expect( allVertices.every( 
+                vertex => vertex.x <= width * pixel && vertex.x >= 0
+                )).toBeTruthy();
+        };
+        for (let i = 1; i < 100; i ++ ) {
+            gameState = tetris(gameState, 'MOVE LEFT');
+            const allVertices = flattenArray(gameState.vertices);
+            expect( allVertices.every( 
+                vertex => vertex.x <= width * pixel && vertex.x >= 0
+                )).toBeTruthy();
+        };
+    });
+    test("Random tetromino goes right and left", () => {
+        const initialState = setupGameboard(width, height, pixel, tempo, stockLength);
+        let gameState = tetris(initialState, 'MOVE DOWN');
+        gameState = tetris(gameState, 'MOVE DOWN');
+        for (let i = 1; i < 100; i ++ ) {
+            gameState = tetris(gameState, 'MOVE RIGHT');
+            const allVertices = flattenArray(gameState.vertices);
+            expect( allVertices.every( 
+                vertex => vertex.x <= width * pixel && vertex.x >= 0
+                )).toBeTruthy();
+        };
+        for (let i = 1; i < 100; i ++ ) {
+            gameState = tetris(gameState, 'MOVE LEFT');
+            const allVertices = flattenArray(gameState.vertices);
+            expect( allVertices.every( 
+                vertex => vertex.x <= width * pixel && vertex.x >= 0
+                )).toBeTruthy();
+        };
+    });
+});
 
 // describe("What happens when tetromino hits the bottom for the first time", () => {
 //     const { width, height, tempo, pixel, startPoint, stockLength } = defaultBoard;

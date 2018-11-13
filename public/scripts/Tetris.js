@@ -21,9 +21,7 @@ function Tetris(prevState, action) {
     const { width, height, pixel, start, stock, score } = prevState;
     let nextState = {};
     let nextCenters;
-    let nextType = prevState.type
-        ? prevState.type 
-        : prevState.stock.getFirstAndReplenish();
+    let nextType = prevState.type || prevState.stock.getFirstAndReplenish();
     let nextPivot = prevState.pivot || start;
     let nextAngle = prevState.angle || 0;
     let nextSquares = prevState.squares || [];    
