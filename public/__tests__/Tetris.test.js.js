@@ -165,21 +165,23 @@ describe("First moves and turns of random tetromino", () => {
 });
 
 describe("Moves down by one pixel, goes back to start when hits the bottom", () => {
-    test("Tetris height = 1", () => {
-        const initialState = setupGameboard(width, height, pixel, tempo, stockLength, 1);     
-        let moveCounter = 1;
-        let gameState = tetris(initialState, 'MOVE DOWN');
-        while (true) {
-            moveCounter ++;
-            const movedPivot = {x: width * pixel / 2, y: moveCounter * pixel};
-            gameState = tetris(gameState, 'MOVE DOWN');
-            if(moveCounter === height) { //YOU'VE GOT TO SCALE THE MOVE IN TETRIS!!!
-                expect(gameState.pivot).toEqual(startPoint);
-                break;
+    for (let i = 0; i < 100; i ++) {
+        test("Random tetris", () => {
+            const initialState = setupGameboard(width, height, pixel, tempo, stockLength);     
+            let moveCounter = 1;
+            let gameState = tetris(initialState, 'MOVE DOWN');
+            while (true) {
+                moveCounter ++;
+                const movedPivot = {x: width * pixel / 2, y: moveCounter * pixel};
+                gameState = tetris(gameState, 'MOVE DOWN');
+                if(moveCounter === height) { //YOU'VE GOT TO SCALE THE MOVE IN TETRIS!!!
+                    expect(gameState.pivot).toEqual(startPoint);
+                    break;
+                };
+                expect(gameState.pivot).toEqual(movedPivot);            
             };
-            expect(gameState.pivot).toEqual(movedPivot);            
-        };
-    });
+        });
+    };
 });
 
 describe("What happens when tetromino hits sides", () => {
@@ -227,53 +229,53 @@ describe("What happens when tetromino hits sides", () => {
     });
 });
 
-// describe("What happens when tetromino hits the bottom for the first time", () => {
-//     const { width, height, tempo, pixel, startPoint, stockLength } = defaultBoard;
+describe("What happens when tetromino hits the bottom for the first time", () => {
+    
+    test("First random tetromino took from stock and stock replenished", () => {
+        const initialState = setupGameboard(width, height, pixel, tempo, stockLength);
+        let gameState = tetris(initialState, 'MOVE DOWN');
+        const stockJustAfterStart = clone( gameState.stock.getCurrent() );
+        for(let i = 1; i; i ++) {
+            gameState = tetris(gameState, 'MOVE DOWN');
+            if(i < height) {
+                expect(gameState.stock.getCurrent()[0]).toEqual(stockJustAfterStart[0]);
+                expect(gameState.stock.getCurrent()[1]).toEqual(stockJustAfterStart[1]);
+                expect(gameState.stock.getCurrent()[2]).toEqual(stockJustAfterStart[2]);   
+                break;
+            } else {
+                expect(gameState.type).toEqual(stockJustAfterStart[0]);
+                expect(gameState.stock.getCurrent()[0]).toEqual(stockJustAfterStart[1]);
+                expect(gameState.stock.getCurrent()[1]).toEqual(stockJustAfterStart[2]);
+                break;
+            };
+        };
 
-//     test("First tetromino took from stock and stock replenished", () => {
-//         const initialState = setupGameboard(width, height, pixel, tempo, stockLength);
-//         let gameState = tetris(initialState, 'MOVE DOWN');
-//         const stockJustAfterStart = clone( gameState.stock.getCurrent() );
-//         let moveCounter = 1;
-//         while (true) {
-//             moveCounter ++;
-//             gameState = tetris(gameState, 'MOVE DOWN');
-//             if(moveCounter === height) {
-//                 expect(gameState.type).toEqual(stockJustAfterStart[0]);
-//                 expect(gameState.stock.getCurrent()[0]).toEqual(stockJustAfterStart[1]);
-//                 expect(gameState.stock.getCurrent()[1]).toEqual(stockJustAfterStart[2]);
-//                 break;
-//             };
-//             expect(gameState.stock.getCurrent()[0]).toEqual(stockJustAfterStart[0]);
-//             expect(gameState.stock.getCurrent()[1]).toEqual(stockJustAfterStart[1]);
-//             expect(gameState.stock.getCurrent()[2]).toEqual(stockJustAfterStart[2]);     
-//         };
-//     });
-//     test("First tetromino saved into gameState.squares", () => {
-//         const initialState = setupGameboard(width, height, pixel, tempo, stockLength);
-//         let gameState = tetris(initialState, 'MOVE DOWN');
-//         const firstTetrominoName = clone( gameState.type.name );
-//         let moveCounter = 1;
-//         let type, angle, pivot;
-//         while (true) {
-//             moveCounter ++;
-//             gameState = tetris(gameState, 'MOVE DOWN');            
-//             if(moveCounter === (height - pixel) / pixel) {
-//                 type  = gameState.type;
-//                 angle = gameState.angle;
-//                 pivot = gameState.pivot;
-//             }
-//             if(moveCounter === height / pixel) {
-//                 expect(gameState.squares.length).toBe(4);
-//                 expect(gameState.squares).toEqual(
-//                     getGlobalTetrominoCenters(type.centers, angle, pixel, pivot)
-//                 );
-//                 break;
-//             };
-//             expect(gameState.type.name).toEqual(firstTetrominoName);            
-//         };
-//     });
-// });
+    });
+    test("First tetromino saved into gameState.squares", () => {
+        const initialState = setupGameboard(width, height, pixel, tempo, stockLength);
+        let gameState = tetris(initialState, 'MOVE DOWN');
+        const firstTetrominoName = clone( gameState.type.name );
+        
+        for(let i = 1; i; i ++) {
+            var prevType,
+                prevAngle,
+                prevPivot;
+            gameState = tetris(gameState, 'MOVE DOWN');
+            if(i <= height - pixel) {
+                expect(gameState.type.name).toEqual(firstTetrominoName);
+                prevType  = gameState.type;
+                prevAngle = gameState.angle;
+                prevPivot = gameState.pivot;
+            } else {
+                expect(gameState.squares.length).toBe(4);
+                expect(gameState.squares).toEqual(
+                    getGlobalTetrominoCenters(prevType.centers, prevAngle, pixel, prevPivot)
+                );
+                break;
+            };
+        };
+    });
+});
 
     // test("2nd round: moving down n-times moves it by n*step, back to start when n=height", () => {
     //     let moveCounter = 1;
