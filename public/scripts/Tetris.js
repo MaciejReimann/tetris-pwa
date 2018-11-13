@@ -34,7 +34,7 @@ function Tetris(prevState, action) {
     } else if(action === 'MOVE RIGHT') {
         nextPivot = movePointOnX(nextPivot, pixel);
     } else if(action === 'MOVE LEFT') {
-        nextPivot = movePointOnX(nextPivot, - pixel);
+        nextPivot = movePointOnX(nextPivot, -pixel);
     } else if(action === 'TURN RIGHT') {
         nextAngle += 90;
     } else if(action === 'TURN LEFT') {

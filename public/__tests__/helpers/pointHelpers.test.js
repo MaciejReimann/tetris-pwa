@@ -1,6 +1,9 @@
 const { 
     isPoint,
     createPoint,
+    movePoint,
+    movePointOnY,
+    movePointOnX,
     addTwoPoints,
     multiplyPoint,
     arePointsEqual,
@@ -39,6 +42,15 @@ test("Is it a point?", () => {
     expect(isPoint({x: 4, name: "not a point"})).toBeFalsy();
     expect(isPoint({x: 4, y: '2', name: "this IS NOT a point however"})).toBeFalsy();
     expect(isPoint({x: '4', y: 'zwei', name: "nor is this"})).toBeFalsy();
+});
+
+test("Move point", () => {
+    expect(movePointOnX(pointZero,  1)).toEqual({x:  1, y:  0});
+    expect(movePointOnX(pointZero, -1)).toEqual({x: -1, y:  0});
+    expect(movePointOnY(pointZero,  1)).toEqual({x:  0, y:  1});
+    expect(movePointOnY(pointZero, -1)).toEqual({x:  0, y: -1});
+    expect(movePointOnX(movePointOnY(pointOne,   1),  1)).toEqual(pointTwo);
+    expect(movePointOnX(movePointOnY(pointTwo,  -1), -1)).toEqual(pointOne);
 });
 
 test("Create a point", () => {
