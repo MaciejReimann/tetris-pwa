@@ -1,10 +1,12 @@
 const {
     getRandomArrayItem,
     createAndPopulateArray,
-    carouselArray
+    carouselArray,
+    flattenArray
 } = require('../../scripts/helpers/arrayHelpers');
 
 const decimalNumbers = [0,1,2,3,4,5,6,7,8,9];
+const wrappedDecimal = decimalNumbers.map(item => [item]);
 
 describe("Test getRandomArrayItem()", () => {
     const array = decimalNumbers;
@@ -64,5 +66,8 @@ describe("Test carouselArray()", () => {
         expect( carouselArray(decimalNumbers, -length - 2) ).toEqual( [8,9,0,1,2,3,4,5,6,7] );
         expect( carouselArray(decimalNumbers, -length - 3) ).toEqual( [7,8,9,0,1,2,3,4,5,6] );
     });
+});
 
+test("Flatten an array", () => {
+    expect( flattenArray(wrappedDecimal) ).toEqual(decimalNumbers)
 });
