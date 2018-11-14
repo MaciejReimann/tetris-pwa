@@ -7,7 +7,6 @@ module.exports = function (gameBoard, callback) {
     const { width, height, pixel, tempo, stocklength } = gameBoard;
     const initialState = setupGameboard(width, height, pixel, tempo, stocklength);
     const onCanvas = initialState;
-    const MOVE_DOWN = 'MOVE DOWN';
     let gameIsRunning;
 
     let gameState = tetris(initialState);
@@ -15,30 +14,39 @@ module.exports = function (gameBoard, callback) {
     function isGameRunning() {
         return gameIsRunning;
     };
-
     function startGame() {
         if(!gameIsRunning) {
             gameIsRunning = setInterval(
                 () => {
-                    gameState = tetris(gameState, MOVE_DOWN, callback)
+                    gameState = tetris(gameState, 'MOVE DOWN', callback)
                 }, 
                 initialState.tempo
             );
         };
     };
-
     function pauseGame() {
         clearInterval(gameIsRunning);
         gameIsRunning = false;
     };
-
     function moveDown() {
-        gameState = tetris(gameState, MOVE_DOWN, callback);
+        gameState = tetris(gameState, 'MOVE DOWN', callback);
+    };
+    function moveRight() {
+        gameState = tetris(gameState, 'MOVE RIGHT', callback);
+    };
+    function moveLeft() {
+        gameState = tetris(gameState, 'MOVE LEFT', callback);
+    };
+    function turnRight() {
+        gameState = tetris(gameState,'TURN RIGHT', callback);
+    };
+    function turnLeft() {
+        gameState = tetris(gameState, 'TURN LEFT', callback);
     };
 
     function getState() {
         return gameState;
-    }
+    };
 
     return {
         isGameRunning,
@@ -46,6 +54,10 @@ module.exports = function (gameBoard, callback) {
         startGame,
         pauseGame,
         moveDown,
+        moveRight,
+        moveLeft,
+        turnRight,
+        turnLeft,
         getState,
-    }
+    };
 };
