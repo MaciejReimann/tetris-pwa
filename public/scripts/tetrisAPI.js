@@ -18,7 +18,8 @@ module.exports = function (gameBoard, callback) {
         if(!gameIsRunning) {
             gameIsRunning = setInterval(
                 () => {
-                    gameState = tetris(gameState, 'MOVE DOWN', callback)
+                    gameState = tetris(gameState, 'MOVE DOWN')
+                    callback();
                 }, 
                 initialState.tempo
             );
@@ -27,21 +28,27 @@ module.exports = function (gameBoard, callback) {
     function pauseGame() {
         clearInterval(gameIsRunning);
         gameIsRunning = false;
+        callback();
     };
     function moveDown() {
         gameState = tetris(gameState, 'MOVE DOWN', callback);
+        callback();
     };
     function moveRight() {
         gameState = tetris(gameState, 'MOVE RIGHT', callback);
+        callback();
     };
     function moveLeft() {
         gameState = tetris(gameState, 'MOVE LEFT', callback);
+        callback();
     };
     function turnRight() {
         gameState = tetris(gameState,'TURN RIGHT', callback);
+        callback();
     };
     function turnLeft() {
         gameState = tetris(gameState, 'TURN LEFT', callback);
+        callback();
     };
 
     function getState() {

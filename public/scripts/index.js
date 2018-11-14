@@ -34,6 +34,7 @@ window.addEventListener('keydown', (e) => {
     } else if(e.key === 'z' || e.key === 'Z') {
         tetris.turnLeft();
     };
+    // render();
 })
 
 

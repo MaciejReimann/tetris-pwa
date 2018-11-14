@@ -75,9 +75,9 @@ function Tetris(prevState, action, callback) {
         }
     };
     console.log(action)
-    if(callback) {
-        callback()
-    };
+    // if(callback) {
+    //     callback()
+    // };
     return Object.assign({}, prevState, nextState);
 };
 
