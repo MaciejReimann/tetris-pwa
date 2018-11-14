@@ -1,16 +1,22 @@
+const gameBoard = require('./gameBoard');
+const tetris = require('./tetrisAPI')(gameBoard, render);
+const CANVAS = document.createElement('CANVAS');
+CANVAS.height = tetris.onCanvas.height;
+CANVAS.width = tetris.onCanvas.width;
+document.querySelector('body').appendChild(CANVAS);
 
+function render() {
+    console.log('rendered')
+    console.log(tetris.getState().vertices)
+}
 
-const tetris = require('./Tetris');
-const setInitialState = require('./helpers/setInitialState');
-const initialState = setInitialState(10, 20, 1, 1000, 3);
-
-let gameState = tetris(initialState, "INITIALIZE");
 
 window.addEventListener('keydown', (e) => {
     if(e.key === 'Enter') {
-        gameState = tetris(gameState, 'START')
+        !tetris.isGameRunning() ? tetris.startGame() : tetris.pauseGame();
+        console.log(tetris.isGameRunning())
     } else if(e.key === 'ArrowDown') {
-        gameState = tetris(gameState, 'MOVE DOWN')
+        tetris.moveDown();
     };
 })
 

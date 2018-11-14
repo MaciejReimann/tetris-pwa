@@ -1,59 +1,12 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-
-const { 
-    createPoint,
-    addTwoPoints,
-    movePoint,
-    movePointOnY,
-    movePointOnX,
-    multiplyPoint,
-    arePointsEqual,   
-    rotatePointOnGlobalZero 
-} = require('./helpers/pointHelpers');
-
-const tetrominoStock = require('./helpers/tetrominoStock');
-
-const {
-    getGlobalTetrominoLocation,
-    getGlobalTetrominoVertices
-} = require('./helpers/tetrominoManipulation');
-
-function Tetris(prevState, action) {
-    const {
-        width, height, pixel, tempo, start, type, pivot, angle, score
-    } = prevState;
-    let nextState = {};
-    let intervalID;
-    if(action === 'INITIALIZE') {
-        console.log("initialized")
-    } else if(action === 'START') {
-        nextState.type = tetrominoStock.getFirstAndReplenish();
-    } else if(action === 'MOVE DOWN') {
-        nextState.pivot = movePointOnY(pivot, pixel);
-    }
-    nextState = Object.assign({}, prevState, nextState);
-    console.log(nextState)
-    return nextState;
+module.exports = {
+    width: 10,
+    height: 20,
+    pixel: 10,
+    tempo: 1000,
+    stockLength: 3
 };
-
-function tetrisSingleton(prevState, action) {
-    let instance;
-    function createInstance() {
-        return Tetris(prevState, action)
-    };
-
-    return {
-        getInstance: function() {
-            if(!instance) {
-                instance = createInstance();
-            }
-            return instance;
-        }
-    }
-}
-
-module.exports = Tetris;
-},{"./helpers/pointHelpers":3,"./helpers/tetrominoManipulation":6,"./helpers/tetrominoStock":7}],2:[function(require,module,exports){
+},{}],2:[function(require,module,exports){
 
 
 function getRandomArrayItem(array) {
@@ -69,17 +22,22 @@ function clone(array) {
 };
 
 function carouselArray(array, m) {
-    const n = m % array.length
+    const n = m % array.length;
     return n >= 0
         ? array.slice(n, array.length).concat(array.slice(0, n))
         : array.slice(array.length + n, array.length).concat(array.slice(0, array.length + n))
-}
+};
+
+function flattenArray(array) {
+    return [].concat.apply([], array);
+};
 
 module.exports = {
     getRandomArrayItem,
     createAndPopulateArray,
     clone,
-    carouselArray
+    carouselArray,
+    flattenArray
 }
 },{}],3:[function(require,module,exports){
 function isPoint(something) {
@@ -121,6 +79,14 @@ function arePointsEqual(point1, point2) {
     return point1.x === point2.x && point1.y === point2.y;
 };
 
+function isPointWithinXRange(point, start, end) {
+    return point.x > start && point.x < end; 
+};
+
+function isPointWithinYRange(point, start, end) {
+    return point.y > start && point.y < end; 
+};
+
 function translatePointToPolar(point, angle) {
     return {
         r: Math.sqrt(Math.pow(point.x, 2) + Math.pow(point.y, 2)),
@@ -149,6 +115,8 @@ module.exports = {
     addTwoPoints,
     multiplyPoint,
     arePointsEqual,
+    isPointWithinXRange,
+    isPointWithinYRange,
     translatePointToPolar,
     translatePointToCartesian,
     rotatePointOnGlobalZero
@@ -176,43 +144,22 @@ module.exports = {
 
 },{"./pointHelpers":3}],5:[function(require,module,exports){
 const tetrominoStock = require('./tetrominoStock');
-const { createPoint } = require('./pointHelpers');
 
-function setInitialState(width, height, pixel, tempo, stockLength) {
+module.exports = function setupGameboard(width, height, pixel, tempo, stockLength, tetrominoHeight) {
     return {
         width: width * pixel,
         height: height * pixel,
+        pixel: pixel,
         tempo: tempo,
-        start: createPoint(width / 2, 0),
-        stockLength,
+        start: {x: width * pixel / 2, y: 0},
         // a flag changed by nextStep();
         gameIsOver: false,
 
-        // create a stock of tetrominos to show them before the game starts,
-        // after game will have started, this property will be assigned a value
-        // by tetrominoStock.getCurrent() in nextStep();
-        stock: tetrominoStock.build(stockLength), 
-
-        // a reference point for all tetromino calculations, after it is moved, 
-        // tetrominoSquares are recalculated;
-        pivot: createPoint(width / 2, 0),
-
-        // falling tetromino local square centers, i.e. its definition, 
-        // first time assigned a value on start(), keeps the valuea untill 
-        // tetromino hits the bottom;
-        type: [],
-
-        // falling tetromino default angle
-        angle: 0,
-
-        // stacked down tetrominos' square centers' global vertices,
-        //  recalculated in nextStep();
-        squares: [],
+        // initialize a stock and make it possible to access and mutate its state;
+        stock: tetrominoStock(stockLength, tetrominoHeight),
     };
 };
-
-module.exports = setInitialState;
-},{"./pointHelpers":3,"./tetrominoStock":7}],6:[function(require,module,exports){
+},{"./tetrominoStock":7}],6:[function(require,module,exports){
 const { 
    regularPolygon
 } = require('./regularPolygon');
@@ -242,7 +189,7 @@ function positionTetromino(tetromino, pivotLocation, ) {
 };
 
 // Here we get the global position of tetromino's square centers;
-function getGlobalTetrominoLocation(tetromino, angle, scale, pivotLocation) {
+function getGlobalTetrominoCenters(tetromino, angle, scale, pivotLocation) {
     return (
         positionTetromino( 
             scaleTetromino( 
@@ -256,13 +203,13 @@ function getGlobalTetrominoLocation(tetromino, angle, scale, pivotLocation) {
 // And finally we receive the global position of eqch if it's square's vertices
 // in the form of array of four array of four point objects each;
 function getGlobalTetrominoVertices(tetromino, angle, scale, pivotLocation) {
-    return getGlobalTetrominoLocation(tetromino, angle, scale, pivotLocation)
+    return getGlobalTetrominoCenters(tetromino, angle, scale, pivotLocation)
         .map(squareCenter => getParallelSquareVertices(angle, squareCenter, scale) );
 }
 
 // Publicly accessed 
 module.exports = {
-    getGlobalTetrominoLocation,
+    getGlobalTetrominoCenters,
     getGlobalTetrominoVertices
 };
 
@@ -272,7 +219,7 @@ module.exports.test = {
     rotateTetromino,
     scaleTetromino,
     positionTetromino,
-    getGlobalTetrominoLocation,
+    getGlobalTetrominoCenters,
     getGlobalTetrominoVertices
 };
 
@@ -285,47 +232,34 @@ const {
 } = require('./arrayHelpers');
 const tetrominoTypes = require('./tetrominoTypes');
 
-// PRIVATE VARIABLE
-let currentStock = [];
+module.exports = function tetrominoStock(length,height) {
+  let currentStock = height 
+    ? createAndPopulateArray(length, () =>_getRandomTetromino(height))
+    : createAndPopulateArray(length, _getRandomTetromino);
 
-// PRIVATE METHODS
-function _getRandomTetromino(height) {
-  if(height === 1) {
-    return tetrominoTypes[0];
-  } else if(height === 2) {
-    return getRandomArrayItem(
-      tetrominoTypes.slice(1, tetrominoTypes.length)
-    );
-  } else {
-    return getRandomArrayItem(tetrominoTypes);
+  function _getRandomTetromino(height) {
+    if(height === 1) {
+      return tetrominoTypes[0];
+    } else if(height === 2) {
+      return getRandomArrayItem(
+        tetrominoTypes.slice(1, tetrominoTypes.length)
+      );
+    } else {
+      return getRandomArrayItem(tetrominoTypes);
+    };
   };
-}; 
 
-// PUBLIC METHODS
-function build(length, height) {
-  if(!height) {
-    currentStock = createAndPopulateArray(length, _getRandomTetromino);
-  } else {
-    currentStock = createAndPopulateArray(length, () =>_getRandomTetromino(height));
+  function getCurrent() {
+    return currentStock;
   };
-  return currentStock;
+  function getFirstAndReplenish() {
+    currentStock.push(_getRandomTetromino());
+    return currentStock.shift();
+  };
+  
+  return { getCurrent, getFirstAndReplenish }
 };
 
-function getCurrent() {
-  return currentStock;
-};
-
-function getFirstAndReplenish() {
-  currentStock.push(_getRandomTetromino());
-  return currentStock.shift();
-};
-
-module.exports = {
-  tetrominoTypes, 
-  build,
-  getCurrent,
-  getFirstAndReplenish,
-};
 },{"./arrayHelpers":2,"./tetrominoTypes":8}],8:[function(require,module,exports){
 // Tetromino defined as an object with name property
 // and their 4 squares' center points later referred 
@@ -396,19 +330,25 @@ module.exports = [
     }
 ]
 },{}],9:[function(require,module,exports){
+const gameBoard = require('./gameBoard');
+const tetris = require('./tetrisAPI')(gameBoard, render);
+const CANVAS = document.createElement('CANVAS');
+CANVAS.height = tetris.onCanvas.height;
+CANVAS.width = tetris.onCanvas.width;
+document.querySelector('body').appendChild(CANVAS);
 
+function render() {
+    console.log('rendered')
+    console.log(tetris.getState().vertices)
+}
 
-const tetris = require('./Tetris');
-const setInitialState = require('./helpers/setInitialState');
-const initialState = setInitialState(10, 20, 1, 1000, 3);
-
-let gameState = tetris(initialState, "INITIALIZE");
 
 window.addEventListener('keydown', (e) => {
     if(e.key === 'Enter') {
-        gameState = tetris(gameState, 'START')
+        !tetris.isGameRunning() ? tetris.startGame() : tetris.pauseGame();
+        console.log(tetris.isGameRunning())
     } else if(e.key === 'ArrowDown') {
-        gameState = tetris(gameState, 'MOVE DOWN')
+        tetris.moveDown();
     };
 })
 
@@ -419,4 +359,142 @@ window.addEventListener('keydown', (e) => {
 
 
 
-},{"./Tetris":1,"./helpers/setInitialState":5}]},{},[9]);
+},{"./gameBoard":1,"./tetrisAPI":11}],10:[function(require,module,exports){
+
+const { 
+    createPoint,
+    addTwoPoints,
+    movePoint,
+    movePointOnY,
+    movePointOnX,
+    multiplyPoint,
+    arePointsEqual,   
+    isPointWithinXRange,
+    isPointWithinYRange,
+    rotatePointOnGlobalZero 
+} = require('./helpers/pointHelpers');
+
+const {
+    getGlobalTetrominoCenters,
+    getGlobalTetrominoVertices
+} = require('./helpers/tetrominoManipulation');
+
+function Tetris(prevState, action, callback) {
+    const { width, height, pixel, start, stock, score } = prevState;
+    let nextState = {};
+    let nextCenters;
+    let nextType = prevState.type || prevState.stock.getFirstAndReplenish();
+    let nextPivot = prevState.pivot || start;
+    let nextAngle = prevState.angle || 0;
+    let nextSquares = prevState.squares || [];    
+
+    // since its pure function, no need for object initialization
+    if(action === 'MOVE DOWN') {
+        nextPivot = movePointOnY(nextPivot, pixel);
+    } else if(action === 'MOVE RIGHT') {
+        nextPivot = movePointOnX(nextPivot, pixel);
+    } else if(action === 'MOVE LEFT') {
+        nextPivot = movePointOnX(nextPivot, -pixel);
+    } else if(action === 'TURN RIGHT') {
+        nextAngle += 90;
+    } else if(action === 'TURN LEFT') {
+        nextAngle -= 90;
+    };
+
+    nextCenters = getGlobalTetrominoCenters(
+        nextType.centers, nextAngle, pixel, nextPivot
+    );
+
+    function moveIsAllowed(points) {
+        return points.every(point => 
+            isPointWithinXRange(point, 0, width) &&
+            isPointWithinYRange(point, 0, height)
+        );
+    };
+
+    if(moveIsAllowed(nextCenters)) {
+        nextState.type     = nextType;
+        nextState.pivot    = nextPivot;
+        nextState.angle    = nextAngle;
+        nextState.squares  = nextSquares;        
+        nextState.vertices = getGlobalTetrominoVertices(
+            nextType.centers, nextAngle, pixel, nextPivot
+        );
+    } else if(action === 'MOVE DOWN') {
+        if(nextPivot.y === start.y) {
+            nextState.gameIsOver = true
+        } else {
+            nextState.squares = nextSquares.concat(
+                getGlobalTetrominoCenters(
+                    prevState.type.centers, 
+                    prevState.angle, 
+                    pixel, 
+                    prevState.pivot
+                )
+            );
+            nextState.pivot   = start;
+            nextState.type    = stock.getFirstAndReplenish();
+        }
+    };
+    console.log(action)
+    if(callback) {
+        callback()
+    };
+    return Object.assign({}, prevState, nextState);
+};
+
+module.exports = Tetris;
+},{"./helpers/pointHelpers":3,"./helpers/tetrominoManipulation":6}],11:[function(require,module,exports){
+// Function returning object with all tetris actions;
+
+const tetris = require('./tetris');
+const setupGameboard = require('./helpers/setupGameboard');
+
+module.exports = function (gameBoard, callback) {
+    const { width, height, pixel, tempo, stocklength } = gameBoard;
+    const initialState = setupGameboard(width, height, pixel, tempo, stocklength);
+    const onCanvas = initialState;
+    const MOVE_DOWN = 'MOVE DOWN';
+    let gameIsRunning;
+
+    let gameState = tetris(initialState);
+
+    function isGameRunning() {
+        return gameIsRunning;
+    };
+
+    function startGame() {
+        if(!gameIsRunning) {
+            gameIsRunning = setInterval(
+                () => {
+                    gameState = tetris(gameState, MOVE_DOWN, callback)
+                }, 
+                initialState.tempo
+            );
+        };
+    };
+
+    function pauseGame() {
+        clearInterval(gameIsRunning);
+        gameIsRunning = false;
+        console.log(gameBoard)
+    };
+
+    function moveDown() {
+        gameState = tetris(gameState, MOVE_DOWN, callback);
+    };
+
+    function getState() {
+        return gameState;
+    }
+
+    return {
+        isGameRunning,
+        onCanvas,
+        startGame,
+        pauseGame,
+        moveDown,
+        getState,
+    }
+};
+},{"./helpers/setupGameboard":5,"./tetris":10}]},{},[9]);
