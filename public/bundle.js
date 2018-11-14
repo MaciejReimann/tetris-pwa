@@ -40,6 +40,28 @@ module.exports = {
     flattenArray
 }
 },{}],3:[function(require,module,exports){
+
+
+function drawSquare(vertices, canvas) {
+    const ctx = canvas.getContext('2d');
+    ctx.beginPath();
+    ctx.moveTo(vertices[0].x, vertices[0].y);
+    ctx.lineTo(vertices[1].x, vertices[1].y);
+    ctx.lineTo(vertices[2].x, vertices[2].y);
+    ctx.lineTo(vertices[3].x, vertices[3].y);
+    return ctx;
+};
+
+function clear(canvas) {
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+};
+
+module.exports = {
+    drawSquare,
+    clear
+};
+},{}],4:[function(require,module,exports){
 function isPoint(something) {
     return typeof something === "object"
         && something.hasOwnProperty("x") 
@@ -121,7 +143,7 @@ module.exports = {
     translatePointToCartesian,
     rotatePointOnGlobalZero
 } 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 const { 
     addTwoPoints,
     translatePointToCartesian
@@ -142,7 +164,7 @@ module.exports = {
     regularPolygon
 };
 
-},{"./pointHelpers":3}],5:[function(require,module,exports){
+},{"./pointHelpers":4}],6:[function(require,module,exports){
 const tetrominoStock = require('./tetrominoStock');
 
 module.exports = function setupGameboard(width, height, pixel, tempo, stockLength, tetrominoHeight) {
@@ -159,7 +181,7 @@ module.exports = function setupGameboard(width, height, pixel, tempo, stockLengt
         stock: tetrominoStock(stockLength, tetrominoHeight),
     };
 };
-},{"./tetrominoStock":7}],6:[function(require,module,exports){
+},{"./tetrominoStock":8}],7:[function(require,module,exports){
 const { 
    regularPolygon
 } = require('./regularPolygon');
@@ -224,7 +246,7 @@ module.exports.test = {
 };
 
 
-},{"./pointHelpers":3,"./regularPolygon":4}],7:[function(require,module,exports){
+},{"./pointHelpers":4,"./regularPolygon":5}],8:[function(require,module,exports){
 // Create, save and manipulate an array of random tetromino types
 const {
   getRandomArrayItem,
@@ -260,7 +282,7 @@ module.exports = function tetrominoStock(length,height) {
   return { getCurrent, getFirstAndReplenish }
 };
 
-},{"./arrayHelpers":2,"./tetrominoTypes":8}],8:[function(require,module,exports){
+},{"./arrayHelpers":2,"./tetrominoTypes":9}],9:[function(require,module,exports){
 // Tetromino defined as an object with name property
 // and their 4 squares' center points later referred 
 // to as pivot;
@@ -329,24 +351,34 @@ module.exports = [
         ]
     }
 ]
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 const gameBoard = require('./gameBoard');
 const tetris = require('./tetrisAPI')(gameBoard, render);
+const {
+    drawSquare,
+    clear
+} = require('./helpers/canvasHelpers')
 const CANVAS = document.createElement('CANVAS');
 CANVAS.height = tetris.onCanvas.height;
 CANVAS.width = tetris.onCanvas.width;
 document.querySelector('body').appendChild(CANVAS);
 
 function render() {
-    console.log('rendered')
-    console.log(tetris.getState().vertices)
-}
+    clear(CANVAS);
+    if(tetris.getState().vertices) {
+        console.log('sdf')
+        tetris.getState().vertices
+            .map(square => drawSquare(square, CANVAS)
+            .fill()
+        );
+    };
+    
+};
 
 
 window.addEventListener('keydown', (e) => {
     if(e.key === 'Enter') {
         !tetris.isGameRunning() ? tetris.startGame() : tetris.pauseGame();
-        console.log(tetris.isGameRunning())
     } else if(e.key === 'ArrowDown') {
         tetris.moveDown();
     };
@@ -359,7 +391,7 @@ window.addEventListener('keydown', (e) => {
 
 
 
-},{"./gameBoard":1,"./tetrisAPI":11}],10:[function(require,module,exports){
+},{"./gameBoard":1,"./helpers/canvasHelpers":3,"./tetrisAPI":12}],11:[function(require,module,exports){
 
 const { 
     createPoint,
@@ -444,7 +476,7 @@ function Tetris(prevState, action, callback) {
 };
 
 module.exports = Tetris;
-},{"./helpers/pointHelpers":3,"./helpers/tetrominoManipulation":6}],11:[function(require,module,exports){
+},{"./helpers/pointHelpers":4,"./helpers/tetrominoManipulation":7}],12:[function(require,module,exports){
 // Function returning object with all tetris actions;
 
 const tetris = require('./tetris');
@@ -477,7 +509,6 @@ module.exports = function (gameBoard, callback) {
     function pauseGame() {
         clearInterval(gameIsRunning);
         gameIsRunning = false;
-        console.log(gameBoard)
     };
 
     function moveDown() {
@@ -497,4 +528,4 @@ module.exports = function (gameBoard, callback) {
         getState,
     }
 };
-},{"./helpers/setupGameboard":5,"./tetris":10}]},{},[9]);
+},{"./helpers/setupGameboard":6,"./tetris":11}]},{},[10]);

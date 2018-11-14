@@ -1,5 +1,5 @@
 //Testing tetris function
-const tetris = require('../scripts/Tetris');
+const tetris = require('../scripts/tetris');
 const { 
     clone,
     flattenArray
@@ -230,7 +230,7 @@ describe("What happens when tetromino hits sides", () => {
 });
 
 describe("What happens when tetromino hits the bottom for the first time", () => {
-    
+
     test("First random tetromino took from stock and stock replenished", () => {
         const initialState = setupGameboard(width, height, pixel, tempo, stockLength);
         let gameState = tetris(initialState, 'MOVE DOWN');
@@ -276,6 +276,18 @@ describe("What happens when tetromino hits the bottom for the first time", () =>
         };
     });
 });
+
+describe("What happens when tetromino hits the bottom height times", () => {
+    test("Tetromino height = 1", () => {
+        //expect game over
+        //expect squares.length
+        //expect startpoint related to i
+    })
+    test("Tetromino height = 2", () => {
+        // all the same, but 2 times faster?
+    })
+});
+
 
     // test("2nd round: moving down n-times moves it by n*step, back to start when n=height", () => {
     //     let moveCounter = 1;

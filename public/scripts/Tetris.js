@@ -17,7 +17,7 @@ const {
     getGlobalTetrominoVertices
 } = require('./helpers/tetrominoManipulation');
 
-function Tetris(prevState, action) {
+function Tetris(prevState, action, callback) {
     const { width, height, pixel, start, stock, score } = prevState;
     let nextState = {};
     let nextCenters;
@@ -74,7 +74,10 @@ function Tetris(prevState, action) {
             nextState.type    = stock.getFirstAndReplenish();
         }
     };
-
+    console.log(action)
+    if(callback) {
+        callback()
+    };
     return Object.assign({}, prevState, nextState);
 };
 

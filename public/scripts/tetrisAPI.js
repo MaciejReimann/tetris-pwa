@@ -30,7 +30,6 @@ module.exports = function (gameBoard, callback) {
     function pauseGame() {
         clearInterval(gameIsRunning);
         gameIsRunning = false;
-        console.log(gameBoard)
     };
 
     function moveDown() {
