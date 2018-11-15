@@ -9,14 +9,14 @@ const {
 
 const {
     getGlobalTetrominoCenters,
-    getGlobalTetrominoVertices
+    getGlobalTetrominoVertices,
+    getParallelSquareVertices
 } = require('./helpers/tetrominoManipulation');
 
 function tetris(prevState, action, callback) {
     const { width, height, pixel, start, stock, score } = prevState;
     let nextState = {};
-    let nextCenters;
-    let nextVertices;
+    let nextCenters;    
     let nextType = prevState.type || prevState.stock.getFirstAndReplenish();
     let nextPivot = prevState.pivot || start;
     let nextAngle = prevState.angle || 0;
@@ -47,7 +47,12 @@ function tetris(prevState, action, callback) {
     };
     // What happens when tetromino is falling;
     if(moveIsAllowed(nextCenters)) {
-        nextVertices = getGlobalTetrominoVertices(
+        nextState.type     = nextType;
+        nextState.pivot    = nextPivot;
+        nextState.angle    = nextAngle;
+        nextState.squares  = nextSquares;
+     // Produce falling tetromino's vertices only in this case;
+        nextState.tetrominoVertices = getGlobalTetrominoVertices(
             nextType.centers, nextAngle, pixel, nextPivot
         );
     } else if(action === 'MOVE DOWN') {
@@ -55,10 +60,10 @@ function tetris(prevState, action, callback) {
             nextState.gameIsOver = true;
         } else {
     // What happens when tetromino hits the bottom;
-            nextType    = stock.getFirstAndReplenish();
-            nextPivot   = start;
-            nextAngle   = 0;
-            nextSquares = nextSquares.concat( getGlobalTetrominoCenters(
+            nextState.type    = stock.getFirstAndReplenish();
+            nextState.pivot   = start;
+            nextState.angle   = 0;
+            nextState.squares = nextSquares.concat( getGlobalTetrominoCenters(
                 prevState.type.centers, 
                 prevState.angle, 
                 pixel, 
@@ -66,13 +71,10 @@ function tetris(prevState, action, callback) {
             ));
         };
     };
-
-    nextState.type     = nextType;
-    nextState.pivot    = nextPivot;
-    nextState.angle    = nextAngle;
-    nextState.squares  = nextSquares;
-    nextState.vertices = nextVertices;
-
+    // Produce fallen squares' vertices in any case;
+    nextState.squareVertices = [].concat(nextSquares
+        .map(center => getParallelSquareVertices(0, center, pixel)
+    ));
     return Object.assign({}, prevState, nextState);
 };
 

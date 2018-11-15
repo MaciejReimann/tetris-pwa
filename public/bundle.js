@@ -232,7 +232,8 @@ function getGlobalTetrominoVertices(tetromino, angle, scale, pivotLocation) {
 // Publicly accessed 
 module.exports = {
     getGlobalTetrominoCenters,
-    getGlobalTetrominoVertices
+    getGlobalTetrominoVertices,
+    getParallelSquareVertices
 };
 
 // Exposed only for testing
@@ -366,8 +367,14 @@ document.querySelector('body').appendChild(CANVAS);
 function render() {
     clear(CANVAS);
     if(tetris.getState().vertices) {
-        console.log('sdf')
         tetris.getState().vertices
+            .map(square => drawSquare(square, CANVAS)
+            .fill()
+        );
+    };
+    console.log(tetris.getState().squareVertices)
+    if(tetris.getState().squareVertices) {
+        tetris.getState().squareVertices
             .map(square => drawSquare(square, CANVAS)
             .fill()
         );
@@ -401,31 +408,28 @@ window.addEventListener('keydown', (e) => {
 },{"./gameBoard":1,"./helpers/canvasHelpers":3,"./tetrisAPI":12}],11:[function(require,module,exports){
 
 const { 
-    createPoint,
-    addTwoPoints,
-    movePoint,
     movePointOnY,
     movePointOnX,
-    multiplyPoint,
     arePointsEqual,   
     isPointWithinXRange,
     isPointWithinYRange,
-    rotatePointOnGlobalZero 
 } = require('./helpers/pointHelpers');
 
 const {
     getGlobalTetrominoCenters,
-    getGlobalTetrominoVertices
+    getGlobalTetrominoVertices,
+    getParallelSquareVertices
 } = require('./helpers/tetrominoManipulation');
 
-function Tetris(prevState, action, callback) {
+function tetris(prevState, action, callback) {
     const { width, height, pixel, start, stock, score } = prevState;
     let nextState = {};
-    let nextCenters;
+    let nextCenters;    
     let nextType = prevState.type || prevState.stock.getFirstAndReplenish();
     let nextPivot = prevState.pivot || start;
     let nextAngle = prevState.angle || 0;
-    let nextSquares = prevState.squares || [];    
+    let nextSquares = prevState.squares || [];
+    // let nextSquareVertices = prevState.squareVertices || [];
 
     // since its pure function, no need for object initialization
     if(action === 'MOVE DOWN') {
@@ -450,39 +454,40 @@ function Tetris(prevState, action, callback) {
             isPointWithinYRange(point, 0, height)
         );
     };
-
+    // What happens when tetromino is falling;
     if(moveIsAllowed(nextCenters)) {
         nextState.type     = nextType;
         nextState.pivot    = nextPivot;
         nextState.angle    = nextAngle;
-        nextState.squares  = nextSquares;        
+        nextState.squares  = nextSquares;
+     // Produce falling tetromino's vertices only in this case;
         nextState.vertices = getGlobalTetrominoVertices(
             nextType.centers, nextAngle, pixel, nextPivot
         );
     } else if(action === 'MOVE DOWN') {
         if(nextPivot.y === start.y) {
-            nextState.gameIsOver = true
+            nextState.gameIsOver = true;
         } else {
-            nextState.squares = nextSquares.concat(
-                getGlobalTetrominoCenters(
-                    prevState.type.centers, 
-                    prevState.angle, 
-                    pixel, 
-                    prevState.pivot
-                )
-            );
-            nextState.pivot   = start;
+    // What happens when tetromino hits the bottom;
             nextState.type    = stock.getFirstAndReplenish();
-        }
+            nextState.pivot   = start;
+            nextState.angle   = 0;
+            nextState.squares = nextSquares.concat( getGlobalTetrominoCenters(
+                prevState.type.centers, 
+                prevState.angle, 
+                pixel, 
+                prevState.pivot 
+            ));
+        };
     };
-    console.log(action)
-    // if(callback) {
-    //     callback()
-    // };
+    // Produce laying squares' vertices in any case;
+    nextState.squareVertices = [].concat(nextSquares
+        .map(center => getParallelSquareVertices(0, center, pixel)
+    ));
     return Object.assign({}, prevState, nextState);
 };
 
-module.exports = Tetris;
+module.exports = tetris;
 },{"./helpers/pointHelpers":4,"./helpers/tetrominoManipulation":7}],12:[function(require,module,exports){
 // Function returning object with all tetris actions;
 

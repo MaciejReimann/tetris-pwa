@@ -47,7 +47,7 @@ describe("First moves and turns of random tetromino", () => {
             expect(gameState.pivot).toEqual(movePointOnY(startPoint, pixel));        
             expect(gameState.angle).toBe(0);
             expect(gameState.squares).toEqual([]);
-            expect(gameState.vertices).toEqual(
+            expect(gameState.tetrominoVertices).toEqual(
                 getGlobalTetrominoVertices(
                     gameState.type.centers,
                     gameState.angle,
@@ -64,7 +64,7 @@ describe("First moves and turns of random tetromino", () => {
             );
             expect(gameState.angle).toBe(0);
             expect(gameState.squares).toEqual([]);
-            expect(gameState.vertices).toEqual(
+            expect(gameState.tetrominoVertices).toEqual(
                 getGlobalTetrominoVertices(
                     gameState.type.centers,
                     gameState.angle,
@@ -81,7 +81,7 @@ describe("First moves and turns of random tetromino", () => {
             )
             expect(gameState.angle).toBe(0);
             expect(gameState.squares).toEqual([]);
-            expect(gameState.vertices).toEqual(
+            expect(gameState.tetrominoVertices).toEqual(
                 getGlobalTetrominoVertices(
                     gameState.type.centers,
                     gameState.angle,
@@ -98,7 +98,7 @@ describe("First moves and turns of random tetromino", () => {
             expect(gameState.pivot).toEqual(movePointOnY(startPoint, 2 * pixel));
             expect(gameState.angle).toBe(0);
             expect(gameState.squares).toEqual([]);
-            expect(gameState.vertices).toEqual(
+            expect(gameState.tetrominoVertices).toEqual(
                 getGlobalTetrominoVertices(
                     gameState.type.centers,
                     gameState.angle,
@@ -116,7 +116,7 @@ describe("First moves and turns of random tetromino", () => {
             );
             expect(gameState.angle).toBe(-90);
             expect(gameState.squares).toEqual([]);
-            expect(gameState.vertices).toEqual(
+            expect(gameState.tetrominoVertices).toEqual(
                 getGlobalTetrominoVertices(
                     gameState.type.centers,
                     gameState.angle,
@@ -134,7 +134,7 @@ describe("First moves and turns of random tetromino", () => {
             );
             expect(gameState.angle).toBe(90);
             expect(gameState.squares).toEqual([]);
-            expect(gameState.vertices).toEqual(
+            expect(gameState.tetrominoVertices).toEqual(
                 getGlobalTetrominoVertices(
                     gameState.type.centers,
                     gameState.angle,
@@ -153,7 +153,7 @@ describe("First moves and turns of random tetromino", () => {
             );
             expect(gameState.angle).toBe(0);
             expect(gameState.squares).toEqual([]);
-            expect(gameState.vertices).toEqual(
+            expect(gameState.tetrominoVertices).toEqual(
                 getGlobalTetrominoVertices(
                     gameState.type.centers,
                     gameState.angle,
@@ -250,6 +250,18 @@ describe("What happens when tetromino hits the bottom for the first time", () =>
             };
         };
 
+    });
+    test("Pivot back to start, angle 0", () => {
+        const initialState = setupGameboard(width, height, pixel, tempo, stockLength);
+        let gameState = tetris(initialState, 'MOVE DOWN');
+        for(let i = 1; i; i ++) {
+            gameState = tetris(gameState, 'MOVE DOWN');
+            if(i === height - 1) {
+                expect(gameState.pivot).toEqual(startPoint);
+                expect(gameState.angle).toBe(0);
+                break;
+            };
+        };
     });
     test("First tetromino saved into gameState.squares", () => {
         const initialState = setupGameboard(width, height, pixel, tempo, stockLength);

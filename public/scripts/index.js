@@ -11,9 +11,15 @@ document.querySelector('body').appendChild(CANVAS);
 
 function render() {
     clear(CANVAS);
-    if(tetris.getState().vertices) {
-        console.log('sdf')
-        tetris.getState().vertices
+    if(tetris.getState().tetrominoVertices) {
+        tetris.getState().tetrominoVertices
+            .map(square => drawSquare(square, CANVAS)
+            .fill()
+        );
+    };
+    console.log(tetris.getState().squareVertices)
+    if(tetris.getState().squareVertices) {
+        tetris.getState().squareVertices
             .map(square => drawSquare(square, CANVAS)
             .fill()
         );

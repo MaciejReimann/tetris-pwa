@@ -48,7 +48,8 @@ function getGlobalTetrominoVertices(tetromino, angle, scale, pivotLocation) {
 // Publicly accessed 
 module.exports = {
     getGlobalTetrominoCenters,
-    getGlobalTetrominoVertices
+    getGlobalTetrominoVertices,
+    getParallelSquareVertices
 };
 
 // Exposed only for testing
