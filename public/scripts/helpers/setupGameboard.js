@@ -6,7 +6,7 @@ module.exports = function setupGameboard(width, height, pixel, tempo, stockLengt
         height: height * pixel,
         pixel: pixel,
         tempo: tempo,
-        start: {x: width * pixel / 2, y: 0},
+        start: {x: width * pixel / 2, y: -pixel},
         // a flag changed by nextStep();
         gameIsOver: false,
 

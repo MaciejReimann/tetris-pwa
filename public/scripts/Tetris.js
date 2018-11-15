@@ -42,7 +42,7 @@ function tetris(prevState, action, callback) {
     function moveIsAllowed(points) {
         return points.every(point => 
             isPointWithinXRange(point, 0, width) &&
-            isPointWithinYRange(point, 0, height)
+            isPointWithinYRange(point, -pixel, height)
         );
     };
     // What happens when tetromino is falling;

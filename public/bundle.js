@@ -173,7 +173,7 @@ module.exports = function setupGameboard(width, height, pixel, tempo, stockLengt
         height: height * pixel,
         pixel: pixel,
         tempo: tempo,
-        start: {x: width * pixel / 2, y: 0},
+        start: {x: width * pixel / 2, y: -pixel},
         // a flag changed by nextStep();
         gameIsOver: false,
 
@@ -366,8 +366,8 @@ document.querySelector('body').appendChild(CANVAS);
 
 function render() {
     clear(CANVAS);
-    if(tetris.getState().vertices) {
-        tetris.getState().vertices
+    if(tetris.getState().tetrominoVertices) {
+        tetris.getState().tetrominoVertices
             .map(square => drawSquare(square, CANVAS)
             .fill()
         );
@@ -429,7 +429,6 @@ function tetris(prevState, action, callback) {
     let nextPivot = prevState.pivot || start;
     let nextAngle = prevState.angle || 0;
     let nextSquares = prevState.squares || [];
-    // let nextSquareVertices = prevState.squareVertices || [];
 
     // since its pure function, no need for object initialization
     if(action === 'MOVE DOWN') {
@@ -451,7 +450,7 @@ function tetris(prevState, action, callback) {
     function moveIsAllowed(points) {
         return points.every(point => 
             isPointWithinXRange(point, 0, width) &&
-            isPointWithinYRange(point, 0, height)
+            isPointWithinYRange(point, -pixel, height)
         );
     };
     // What happens when tetromino is falling;
@@ -461,7 +460,7 @@ function tetris(prevState, action, callback) {
         nextState.angle    = nextAngle;
         nextState.squares  = nextSquares;
      // Produce falling tetromino's vertices only in this case;
-        nextState.vertices = getGlobalTetrominoVertices(
+        nextState.tetrominoVertices = getGlobalTetrominoVertices(
             nextType.centers, nextAngle, pixel, nextPivot
         );
     } else if(action === 'MOVE DOWN') {
@@ -480,7 +479,7 @@ function tetris(prevState, action, callback) {
             ));
         };
     };
-    // Produce laying squares' vertices in any case;
+    // Produce fallen squares' vertices in any case;
     nextState.squareVertices = [].concat(nextSquares
         .map(center => getParallelSquareVertices(0, center, pixel)
     ));

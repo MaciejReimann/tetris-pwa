@@ -20,7 +20,7 @@ const
     height = 20,
     pixel = 2,
     tempo = 1000,  
-    startPoint = {x: width * pixel / 2, y: 0},
+    startPoint = {x: width * pixel / 2, y: -pixel},
     stockLength = 3;
 
 describe("First moves and turns of random tetromino", () => {    
