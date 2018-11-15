@@ -5,7 +5,7 @@ const {
 } = require('./arrayHelpers');
 
 module.exports = function tetrominoStock(length, height, colorPalette) {
-  const tetrominoTypes = require('./tetrominoTypes')(colorPalette);
+  const tetrominoTypes = require('./tetrominosEdited')(colorPalette);
   let currentStock = height 
     ? createAndPopulateArray(length, () =>_getRandomTetromino(height))
     : createAndPopulateArray(length, _getRandomTetromino);

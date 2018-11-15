@@ -1,12 +1,8 @@
-const {
-    createPoint
-} = require('./pointHelpers')
-
 // Tetromino defined as an object with name property
 // and their 4 squares' center points later referred 
 // to as pivot;
 
-const types = [
+module.exports = [
     {
         name: "I_type",
         colors: ["black", "cyan"],
@@ -78,26 +74,3 @@ const types = [
         ]
     }
 ];
-
-module.exports = function(colorPalette) {
-    function reformedTypes(n) {
-        return types.map(type => type.centers
-            .map(center => 
-                createPoint(
-                    center.x, 
-                    center.y, 
-                    {
-                        name: type.name,
-                        color: type.colors[n]
-                    }
-                )
-            )
-        );
-    };
-
-    if(!colorPalette || colorPalette === 'classic') {
-        return reformedTypes(1);
-    } else if(colorPalette === 'black') {
-        return reformedTypes(0);
-    };
-};

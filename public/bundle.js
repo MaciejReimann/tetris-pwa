@@ -8,7 +8,7 @@ module.exports = {
     tempo: 1000,
     stockLength: 3,
     tetrominoHeight: "random",
-    colorPalette: "black"
+    colorPalette: "classic"
 };
 
 },{}],2:[function(require,module,exports){
@@ -266,7 +266,7 @@ const {
 } = require('./arrayHelpers');
 
 module.exports = function tetrominoStock(length, height, colorPalette) {
-  const tetrominoTypes = require('./tetrominoTypes')(colorPalette);
+  const tetrominoTypes = require('./tetrominosEdited')(colorPalette);
   let currentStock = height 
     ? createAndPopulateArray(length, () =>_getRandomTetromino(height))
     : createAndPopulateArray(length, _getRandomTetromino);
@@ -294,16 +294,12 @@ module.exports = function tetrominoStock(length, height, colorPalette) {
   return { getCurrent, getFirstAndReplenish }
 };
 
-},{"./arrayHelpers":2,"./tetrominoTypes":9}],9:[function(require,module,exports){
-const {
-    createPoint
-} = require('./pointHelpers')
-
+},{"./arrayHelpers":2,"./tetrominosEdited":10}],9:[function(require,module,exports){
 // Tetromino defined as an object with name property
 // and their 4 squares' center points later referred 
 // to as pivot;
 
-const types = [
+module.exports = [
     {
         name: "I_type",
         colors: ["black", "cyan"],
@@ -375,10 +371,13 @@ const types = [
         ]
     }
 ];
+},{}],10:[function(require,module,exports){
+const { createPoint } = require('./pointHelpers');
+const tetrominoTypes = require('./tetrominoTypes');
 
 module.exports = function(colorPalette) {
     function reformedTypes(n) {
-        return types.map(type => type.centers
+        return tetrominoTypes.map(type => type.centers
             .map(center => 
                 createPoint(
                     center.x, 
@@ -398,7 +397,7 @@ module.exports = function(colorPalette) {
         return reformedTypes(0);
     };
 };
-},{"./pointHelpers":4}],10:[function(require,module,exports){
+},{"./pointHelpers":4,"./tetrominoTypes":9}],11:[function(require,module,exports){
 const gameBoard = require('./gameBoard');
 const tetris = require('./tetrisAPI')(gameBoard, render);
 const {
@@ -453,7 +452,7 @@ window.addEventListener('keydown', (e) => {
 
 
 
-},{"./gameBoard":1,"./helpers/canvasHelpers":3,"./tetrisAPI":12}],11:[function(require,module,exports){
+},{"./gameBoard":1,"./helpers/canvasHelpers":3,"./tetrisAPI":13}],12:[function(require,module,exports){
 
 const { 
     movePointOnY,
@@ -536,7 +535,7 @@ function tetris(prevState, action, callback) {
 };
 
 module.exports = tetris;
-},{"./helpers/pointHelpers":4,"./helpers/tetrominoManipulation":7}],12:[function(require,module,exports){
+},{"./helpers/pointHelpers":4,"./helpers/tetrominoManipulation":7}],13:[function(require,module,exports){
 // Function returning object with all tetris actions;
 
 const tetris = require('./tetris');
@@ -607,4 +606,4 @@ module.exports = function (gameBoard, callback) {
         getState,
     };
 };
-},{"./helpers/setupGameboard":6,"./tetris":11}]},{},[10]);
+},{"./helpers/setupGameboard":6,"./tetris":12}]},{},[11]);

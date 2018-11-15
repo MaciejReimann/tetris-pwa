@@ -1,4 +1,4 @@
-const tetrominoTypes = require('../../scripts/helpers/tetrominoTypes');
+const tetrominoTypes = require('../../scripts/helpers/tetrominosEdited');
 
 test('Black color palette', () => {
     const blackTypes = tetrominoTypes("black");
