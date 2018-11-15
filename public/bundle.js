@@ -450,7 +450,8 @@ function tetris(prevState, action, callback) {
     function moveIsAllowed(points) {
         return points.every(point => 
             isPointWithinXRange(point, 0, width) &&
-            isPointWithinYRange(point, -pixel, height)
+            isPointWithinYRange(point, -pixel, height) &&
+            nextSquares.every(p => !arePointsEqual(p, point))
         );
     };
     // What happens when tetromino is falling;
