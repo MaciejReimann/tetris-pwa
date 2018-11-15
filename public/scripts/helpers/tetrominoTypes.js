@@ -9,6 +9,7 @@ const {
 const types = [
     {
         name: "I_type",
+        colors: ["black", "cyan"],
         centers: [
             { x: -1.5, y:  0.5 },
             { x: -0.5, y:  0.5 },
@@ -18,6 +19,7 @@ const types = [
     },
     {
         name: "J_type",
+        colors: ["black", "blue"],
         centers: [
             { x: -1.5, y: -0.5 },
             { x: -0.5, y: -0.5 },
@@ -27,6 +29,7 @@ const types = [
     },
     {
         name: "L_type",
+        colors: ["black", "orange"],
         centers: [
             { x: -0.5, y:  0.5 },
             { x: -0.5, y: -0.5 },
@@ -36,6 +39,7 @@ const types = [
     },
     {
         name: "O_type",
+        colors: ["black", "yellow"],
         centers: [
             { x: -0.5, y: -0.5 },
             { x:  0.5, y: -0.5 },
@@ -45,6 +49,7 @@ const types = [
     },
     {
         name: "S_type",
+        colors: ["black", "green"],
         centers: [
             { x: -0.5, y:  0.5 },
             { x:  0.5, y:  0.5 },
@@ -54,6 +59,7 @@ const types = [
     },
     {
         name: "T_type",
+        colors: ["black", "magenta"],
         centers: [
             { x: -0.5, y: -0.5 },
             { x:  0.5, y: -0.5 },
@@ -63,6 +69,7 @@ const types = [
     },
     {
         name: "T_type",
+        colors: ["black", "red"],
         centers: [
             { x: -0.5, y: -0.5 },
             { x:  0.5, y: -0.5 },
@@ -73,23 +80,24 @@ const types = [
 ];
 
 module.exports = function(colorPalette) {
-    const editedTypes = types
-        .map(type => type.centers
+    function reformedTypes(n) {
+        return types.map(type => type.centers
             .map(center => 
-                createPoint(center.x, center.y, {name: type.name})
+                createPoint(
+                    center.x, 
+                    center.y, 
+                    {
+                        name: type.name,
+                        color: type.colors[n]
+                    }
+                )
             )
         );
-    const classicColors = ['cyan']
-    function addColors(array, color) {        
-        return array.map(
-            type => type.centers.map(center => 
-                Object.assign({}, center, {color: color})))
-    }
-
+    };
 
     if(!colorPalette || colorPalette === 'classic') {
-       return editedTypes;
-    } else if(colorPalette === 'test') {
-        return types.map(type => type.centers.map(center => Object.assign(center, {color: 'red'})))
+        return reformedTypes(1);
+    } else if(colorPalette === 'black') {
+        return reformedTypes(0);
     };
 };

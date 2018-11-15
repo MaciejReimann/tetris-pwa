@@ -10,17 +10,19 @@ CANVAS.width = tetris.onCanvas.width;
 document.querySelector('body').appendChild(CANVAS);
 
 function render() {
+    const tetromino = tetris.getState().tetrominoVertices;
+    const squares = tetris.getState().squareVertices;
+    
     clear(CANVAS);
-    if(tetris.getState().tetrominoVertices) {
-        tetris.getState().tetrominoVertices
-            .map(square => drawSquare(square, CANVAS)
+    if(tetromino) {
+        tetromino
+            .map(square => drawSquare(square, CANVAS, square[0].prop.color)
             .fill()
         );
     };
-    console.log(tetris.getState().squareVertices)
-    if(tetris.getState().squareVertices) {
-        tetris.getState().squareVertices
-            .map(square => drawSquare(square, CANVAS)
+    if(squares) {
+        squares
+            .map(square => drawSquare(square, CANVAS, square[0].prop.color)
             .fill()
         );
     };    

@@ -1,8 +1,9 @@
 
 
-function drawSquare(vertices, canvas) {
+function drawSquare(vertices, canvas, color) {
     const ctx = canvas.getContext('2d');
     ctx.beginPath();
+    ctx.fillStyle = color;
     ctx.moveTo(vertices[0].x, vertices[0].y);
     ctx.lineTo(vertices[1].x, vertices[1].y);
     ctx.lineTo(vertices[2].x, vertices[2].y);

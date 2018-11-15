@@ -8,7 +8,7 @@ module.exports = {
     tempo: 1000,
     stockLength: 3,
     tetrominoHeight: "random",
-    colorPalette: "classic"
+    colorPalette: "black"
 };
 
 },{}],2:[function(require,module,exports){
@@ -47,9 +47,10 @@ module.exports = {
 },{}],3:[function(require,module,exports){
 
 
-function drawSquare(vertices, canvas) {
+function drawSquare(vertices, canvas, color) {
     const ctx = canvas.getContext('2d');
     ctx.beginPath();
+    ctx.fillStyle = color;
     ctx.moveTo(vertices[0].x, vertices[0].y);
     ctx.lineTo(vertices[1].x, vertices[1].y);
     ctx.lineTo(vertices[2].x, vertices[2].y);
@@ -75,15 +76,17 @@ function isPoint(something) {
         && typeof something.y === 'number'
 };
 
-function createPoint(x, y) {
+function createPoint(x, y, prop) {
+    const property = prop || {};
     return {
         x: x,
-        y: y
+        y: y,
+        prop: property
     };
 };
 
 function movePoint(point, x, y) {
-    return createPoint(point.x + x, point.y + y);
+    return createPoint(point.x + x, point.y + y, point.prop);
 };
 
 function movePointOnY(point, y) {
@@ -95,11 +98,12 @@ function movePointOnX(point, x) {
 };
 
 function addTwoPoints(point1, point2) {
-    return createPoint(point1.x + point2.x, point1.y + point2.y);
+    const mergedProps = Object.assign({}, point1.prop, point2.prop);
+    return createPoint(point1.x + point2.x, point1.y + point2.y, mergedProps);
 };
 
 function multiplyPoint(point, n) {
-    return createPoint(point.x * n, point.y * n)
+    return createPoint(point.x * n, point.y * n, point.prop)
 };
 
 function arePointsEqual(point1, point2) {
@@ -117,7 +121,8 @@ function isPointWithinYRange(point, start, end) {
 function translatePointToPolar(point, angle) {
     return {
         r: Math.sqrt(Math.pow(point.x, 2) + Math.pow(point.y, 2)),
-        angle: Math.atan2(point.y, point.x) * (180 / Math.PI) + angle
+        angle: Math.atan2(point.y, point.x) * (180 / Math.PI) + angle,
+        prop: point.prop || {}
     };
 };
 
@@ -125,7 +130,8 @@ function translatePointToCartesian(point) {
     const roundValue = n => Math.round(n * 1000) / 1000;
     return {
         x: roundValue(point.r * Math.cos(point.angle * (Math.PI / 180))),
-        y: roundValue(point.r * Math.sin(point.angle * (Math.PI / 180)))
+        y: roundValue(point.r * Math.sin(point.angle * (Math.PI / 180))),
+        prop: point.prop || {}
     };
 };
 
@@ -289,81 +295,110 @@ module.exports = function tetrominoStock(length, height, colorPalette) {
 };
 
 },{"./arrayHelpers":2,"./tetrominoTypes":9}],9:[function(require,module,exports){
+const {
+    createPoint
+} = require('./pointHelpers')
+
 // Tetromino defined as an object with name property
 // and their 4 squares' center points later referred 
 // to as pivot;
+
+const types = [
+    {
+        name: "I_type",
+        colors: ["black", "cyan"],
+        centers: [
+            { x: -1.5, y:  0.5 },
+            { x: -0.5, y:  0.5 },
+            { x:  0.5, y:  0.5 },
+            { x:  1.5, y:  0.5 }
+        ]
+    },
+    {
+        name: "J_type",
+        colors: ["black", "blue"],
+        centers: [
+            { x: -1.5, y: -0.5 },
+            { x: -0.5, y: -0.5 },
+            { x:  0.5, y: -0.5 },
+            { x:  0.5, y:  0.5 }
+        ]
+    },
+    {
+        name: "L_type",
+        colors: ["black", "orange"],
+        centers: [
+            { x: -0.5, y:  0.5 },
+            { x: -0.5, y: -0.5 },
+            { x:  0.5, y: -0.5 },
+            { x:  1.5, y: -0.5 }
+        ]
+    },
+    {
+        name: "O_type",
+        colors: ["black", "yellow"],
+        centers: [
+            { x: -0.5, y: -0.5 },
+            { x:  0.5, y: -0.5 },
+            { x:  0.5, y:  0.5 },
+            { x: -0.5, y:  0.5 }
+        ]
+    },
+    {
+        name: "S_type",
+        colors: ["black", "green"],
+        centers: [
+            { x: -0.5, y:  0.5 },
+            { x:  0.5, y:  0.5 },
+            { x:  0.5, y: -0.5 },
+            { x:  1.5, y: -0.5 }
+        ]
+    },
+    {
+        name: "T_type",
+        colors: ["black", "magenta"],
+        centers: [
+            { x: -0.5, y: -0.5 },
+            { x:  0.5, y: -0.5 },
+            { x:  1.5, y: -0.5 },
+            { x:  0.5, y:  0.5 }
+        ]
+    },
+    {
+        name: "T_type",
+        colors: ["black", "red"],
+        centers: [
+            { x: -0.5, y: -0.5 },
+            { x:  0.5, y: -0.5 },
+            { x:  0.5, y:  0.5 },
+            { x:  1.5, y:  0.5 }
+        ]
+    }
+];
+
 module.exports = function(colorPalette) {
-    // function classicCololors
-    const types = [
-        {
-            name: "I_type",
-            centers: [
-                { x: -1.5, y:  0.5 },
-                { x: -0.5, y:  0.5 },
-                { x:  0.5, y:  0.5 },
-                { x:  1.5, y:  0.5 }
-            ]
-        },
-        {
-            name: "J_type",
-            centers: [
-                { x: -1.5, y: -0.5 },
-                { x: -0.5, y: -0.5 },
-                { x:  0.5, y: -0.5 },
-                { x:  0.5, y:  0.5 }
-            ]
-        },
-        {
-            name: "L_type",
-            centers: [
-                { x: -0.5, y:  0.5 },
-                { x: -0.5, y: -0.5 },
-                { x:  0.5, y: -0.5 },
-                { x:  1.5, y: -0.5 }
-            ]
-        },
-        {
-            name: "O_type",
-            centers: [
-                { x: -0.5, y: -0.5 },
-                { x:  0.5, y: -0.5 },
-                { x:  0.5, y:  0.5 },
-                { x: -0.5, y:  0.5 }
-            ]
-        },
-        {
-            name: "S_type",
-            centers: [
-                { x: -0.5, y:  0.5 },
-                { x:  0.5, y:  0.5 },
-                { x:  0.5, y: -0.5 },
-                { x:  1.5, y: -0.5 }
-            ]
-        },
-        {
-            name: "T_type",
-            centers: [
-                { x: -0.5, y: -0.5 },
-                { x:  0.5, y: -0.5 },
-                { x:  1.5, y: -0.5 },
-                { x:  0.5, y:  0.5 }
-            ]
-        },
-        {
-            name: "T_type",
-            centers: [
-                { x: -0.5, y: -0.5 },
-                { x:  0.5, y: -0.5 },
-                { x:  0.5, y:  0.5 },
-                { x:  1.5, y:  0.5 }
-            ]
-        }
-    ];
+    function reformedTypes(n) {
+        return types.map(type => type.centers
+            .map(center => 
+                createPoint(
+                    center.x, 
+                    center.y, 
+                    {
+                        name: type.name,
+                        color: type.colors[n]
+                    }
+                )
+            )
+        );
+    };
+
     if(!colorPalette || colorPalette === 'classic') {
-        return types;
-    }     
+        return reformedTypes(1);
+    } else if(colorPalette === 'black') {
+        return reformedTypes(0);
+    };
 };
-},{}],10:[function(require,module,exports){
+},{"./pointHelpers":4}],10:[function(require,module,exports){
 const gameBoard = require('./gameBoard');
 const tetris = require('./tetrisAPI')(gameBoard, render);
 const {
@@ -376,17 +411,19 @@ CANVAS.width = tetris.onCanvas.width;
 document.querySelector('body').appendChild(CANVAS);
 
 function render() {
+    const tetromino = tetris.getState().tetrominoVertices;
+    const squares = tetris.getState().squareVertices;
+    
     clear(CANVAS);
-    if(tetris.getState().tetrominoVertices) {
-        tetris.getState().tetrominoVertices
-            .map(square => drawSquare(square, CANVAS)
+    if(tetromino) {
+        tetromino
+            .map(square => drawSquare(square, CANVAS, square[0].prop.color)
             .fill()
         );
     };
-    console.log(tetris.getState().squareVertices)
-    if(tetris.getState().squareVertices) {
-        tetris.getState().squareVertices
-            .map(square => drawSquare(square, CANVAS)
+    if(squares) {
+        squares
+            .map(square => drawSquare(square, CANVAS, square[0].prop.color)
             .fill()
         );
     };    
@@ -455,7 +492,7 @@ function tetris(prevState, action, callback) {
     };
 
     nextCenters = getGlobalTetrominoCenters(
-        nextType.centers, nextAngle, pixel, nextPivot
+        nextType, nextAngle, pixel, nextPivot
     );
 
     function moveIsAllowed(points) {
@@ -473,7 +510,7 @@ function tetris(prevState, action, callback) {
         nextState.squares  = nextSquares;
      // Produce falling tetromino's vertices only in this case;
         nextState.tetrominoVertices = getGlobalTetrominoVertices(
-            nextType.centers, nextAngle, pixel, nextPivot
+            nextType, nextAngle, pixel, nextPivot
         );
     } else if(action === 'MOVE DOWN') {
         if(nextPivot.y === start.y) {
@@ -484,7 +521,7 @@ function tetris(prevState, action, callback) {
             nextState.pivot   = start;
             nextState.angle   = 0;
             nextState.squares = nextSquares.concat( getGlobalTetrominoCenters(
-                prevState.type.centers, 
+                prevState.type, 
                 prevState.angle, 
                 pixel, 
                 prevState.pivot 
