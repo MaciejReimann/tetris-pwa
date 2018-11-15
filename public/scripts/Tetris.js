@@ -1,15 +1,10 @@
 
 const { 
-    createPoint,
-    addTwoPoints,
-    movePoint,
     movePointOnY,
     movePointOnX,
-    multiplyPoint,
     arePointsEqual,   
     isPointWithinXRange,
     isPointWithinYRange,
-    rotatePointOnGlobalZero 
 } = require('./helpers/pointHelpers');
 
 const {
@@ -17,14 +12,15 @@ const {
     getGlobalTetrominoVertices
 } = require('./helpers/tetrominoManipulation');
 
-function Tetris(prevState, action, callback) {
+function tetris(prevState, action, callback) {
     const { width, height, pixel, start, stock, score } = prevState;
     let nextState = {};
     let nextCenters;
+    let nextVertices;
     let nextType = prevState.type || prevState.stock.getFirstAndReplenish();
     let nextPivot = prevState.pivot || start;
     let nextAngle = prevState.angle || 0;
-    let nextSquares = prevState.squares || [];    
+    let nextSquares = prevState.squares || [];
 
     // since its pure function, no need for object initialization
     if(action === 'MOVE DOWN') {
@@ -49,36 +45,35 @@ function Tetris(prevState, action, callback) {
             isPointWithinYRange(point, 0, height)
         );
     };
-
+    // What happens when tetromino is falling;
     if(moveIsAllowed(nextCenters)) {
-        nextState.type     = nextType;
-        nextState.pivot    = nextPivot;
-        nextState.angle    = nextAngle;
-        nextState.squares  = nextSquares;        
-        nextState.vertices = getGlobalTetrominoVertices(
+        nextVertices = getGlobalTetrominoVertices(
             nextType.centers, nextAngle, pixel, nextPivot
         );
     } else if(action === 'MOVE DOWN') {
         if(nextPivot.y === start.y) {
-            nextState.gameIsOver = true
+            nextState.gameIsOver = true;
         } else {
-            nextState.squares = nextSquares.concat(
-                getGlobalTetrominoCenters(
-                    prevState.type.centers, 
-                    prevState.angle, 
-                    pixel, 
-                    prevState.pivot
-                )
-            );
-            nextState.pivot   = start;
-            nextState.type    = stock.getFirstAndReplenish();
-        }
+    // What happens when tetromino hits the bottom;
+            nextType    = stock.getFirstAndReplenish();
+            nextPivot   = start;
+            nextAngle   = 0;
+            nextSquares = nextSquares.concat( getGlobalTetrominoCenters(
+                prevState.type.centers, 
+                prevState.angle, 
+                pixel, 
+                prevState.pivot 
+            ));
+        };
     };
-    console.log(action)
-    // if(callback) {
-    //     callback()
-    // };
+
+    nextState.type     = nextType;
+    nextState.pivot    = nextPivot;
+    nextState.angle    = nextAngle;
+    nextState.squares  = nextSquares;
+    nextState.vertices = nextVertices;
+
     return Object.assign({}, prevState, nextState);
 };
 
-module.exports = Tetris;
+module.exports = tetris;
