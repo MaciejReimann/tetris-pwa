@@ -412,7 +412,7 @@ document.querySelector('body').appendChild(CANVAS);
 function render() {
     const tetromino = tetris.getState().tetrominoVertices;
     const squares = tetris.getState().squareVertices;
-    
+
     clear(CANVAS);
     if(tetromino) {
         tetromino
@@ -429,17 +429,18 @@ function render() {
 };
 
 window.addEventListener('keydown', (e) => {
-    if(e.key === 'Enter') {
+    console.log(e.keyCode)
+    if(e.key === 'Enter' || e.key === ' ') {
         !tetris.isGameRunning() ? tetris.startGame() : tetris.pauseGame();
-    } else if(e.key === 'ArrowDown') {
+    } else if(e.key === 'ArrowDown' && tetris.isGameRunning()) {
         tetris.moveDown();
-    } else if(e.key === 'ArrowLeft') {
+    } else if(e.key === 'ArrowLeft' && tetris.isGameRunning()) {
         tetris.moveLeft();
-    } else if(e.key === 'ArrowRight') {
+    } else if(e.key === 'ArrowRight' && tetris.isGameRunning()) {
         tetris.moveRight();
-    } else if(e.key === 'a' || e.key === 'A') {
+    } else if(e.key === 'a' || e.key === 'A' && tetris.isGameRunning()) {
         tetris.turnRight();
-    } else if(e.key === 'z' || e.key === 'Z') {
+    } else if(e.key === 'z' || e.key === 'Z' && tetris.isGameRunning()) {
         tetris.turnLeft();
     };
     // render();
