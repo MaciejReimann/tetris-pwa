@@ -36,7 +36,7 @@ function tetris(prevState, action, callback) {
     };
 
     nextCenters = getGlobalTetrominoCenters(
-        nextType.centers, nextAngle, pixel, nextPivot
+        nextType, nextAngle, pixel, nextPivot
     );
 
     function moveIsAllowed(points) {
@@ -54,7 +54,7 @@ function tetris(prevState, action, callback) {
         nextState.squares  = nextSquares;
      // Produce falling tetromino's vertices only in this case;
         nextState.tetrominoVertices = getGlobalTetrominoVertices(
-            nextType.centers, nextAngle, pixel, nextPivot
+            nextType, nextAngle, pixel, nextPivot
         );
     } else if(action === 'MOVE DOWN') {
         if(nextPivot.y === start.y) {
@@ -65,7 +65,7 @@ function tetris(prevState, action, callback) {
             nextState.pivot   = start;
             nextState.angle   = 0;
             nextState.squares = nextSquares.concat( getGlobalTetrominoCenters(
-                prevState.type.centers, 
+                prevState.type, 
                 prevState.angle, 
                 pixel, 
                 prevState.pivot 

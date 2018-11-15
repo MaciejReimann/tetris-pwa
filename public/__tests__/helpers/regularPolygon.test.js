@@ -5,6 +5,7 @@ const {
     carouselArray
 } = require('../../scripts/helpers/arrayHelpers');
 const {
+    createPoint,
     addTwoPoints,
     multiplyPoint,
 } = require('../../scripts/helpers/pointHelpers');
@@ -15,16 +16,16 @@ const defaultCenter = { x: 0, y: 0 };
 describe("Test a square", () => {
     const sides = 4; 
     const parallelSquareVertices = [
-        { x: 1, y: 1 },
-        { x: -1, y: 1 },
-        { x: -1, y: -1 },
-        { x: 1, y: -1 }
+        createPoint( 1, 1),
+        createPoint(-1, 1),
+        createPoint(-1,-1),
+        createPoint( 1,-1)
     ];
     const rot45degSquareVertices = [
-        { x: 1, y: 0 },
-        { x: 0, y: 1 },
-        { x: -1, y: 0 },
-        { x: 0, y: -1 }
+        createPoint( 1, 0),
+        createPoint( 0, 1),
+        createPoint(-1, 0),
+        createPoint( 0,-1)
     ];
     test("Parallel to x and y axis, side length = 2", () => {
         const angle = defaultAngle + 45;
