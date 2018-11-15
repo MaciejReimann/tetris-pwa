@@ -6,14 +6,14 @@ describe('', () => {
         const max = 1000;
         let counter = 0;
         while (counter < max) {
-            const stock = tetrominoStock(counter);
+            const stock = tetrominoStock(counter, 'random', 'classic');
             expect(stock.getCurrent().length).toBe(counter);
             counter ++;
         };        
     });
     test("Get n times the n-th element and see if they're equal", () => {  
         const n = 1000;
-        const stock = tetrominoStock(n);
+        const stock = tetrominoStock(n, 'random', 'classic');
         const originalStock = clone(stock.getCurrent());       
         let counter = 0;
         while (counter < n) {
@@ -22,7 +22,7 @@ describe('', () => {
         };
     });
     test("Accessing the stock", () => {
-        const stock = tetrominoStock(3);
+        const stock = tetrominoStock(3, 'random', 'classic');
         const originalStock = clone(stock.getCurrent());
         // before doing anything
         expect(stock.getCurrent()).toEqual(originalStock);

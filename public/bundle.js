@@ -1,11 +1,16 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+// Configuration data passed to setupGameboard() in tetris_API;
+
 module.exports = {
     width: 10,
     height: 20,
     pixel: 10,
     tempo: 1000,
-    stockLength: 3
+    stockLength: 3,
+    tetrominoHeight: "random",
+    colorPalette: "classic"
 };
+
 },{}],2:[function(require,module,exports){
 
 
@@ -167,7 +172,7 @@ module.exports = {
 },{"./pointHelpers":4}],6:[function(require,module,exports){
 const tetrominoStock = require('./tetrominoStock');
 
-module.exports = function setupGameboard(width, height, pixel, tempo, stockLength, tetrominoHeight) {
+module.exports = function setupGameboard(width, height, pixel, tempo, stockLength, tetrominoHeight, colorPalette) {
     return {
         width: width * pixel,
         height: height * pixel,
@@ -178,7 +183,7 @@ module.exports = function setupGameboard(width, height, pixel, tempo, stockLengt
         gameIsOver: false,
 
         // initialize a stock and make it possible to access and mutate its state;
-        stock: tetrominoStock(stockLength, tetrominoHeight),
+        stock: tetrominoStock(stockLength, tetrominoHeight, colorPalette),
     };
 };
 },{"./tetrominoStock":8}],7:[function(require,module,exports){
@@ -253,9 +258,9 @@ const {
   getRandomArrayItem,
   createAndPopulateArray,
 } = require('./arrayHelpers');
-const tetrominoTypes = require('./tetrominoTypes');
 
-module.exports = function tetrominoStock(length,height) {
+module.exports = function tetrominoStock(length, height, colorPalette) {
+  const tetrominoTypes = require('./tetrominoTypes')(colorPalette);
   let currentStock = height 
     ? createAndPopulateArray(length, () =>_getRandomTetromino(height))
     : createAndPopulateArray(length, _getRandomTetromino);
@@ -287,71 +292,77 @@ module.exports = function tetrominoStock(length,height) {
 // Tetromino defined as an object with name property
 // and their 4 squares' center points later referred 
 // to as pivot;
-module.exports = [
-    {
-        name: "I_type",
-        centers: [
-            { x: -1.5, y:  0.5 },
-            { x: -0.5, y:  0.5 },
-            { x:  0.5, y:  0.5 },
-            { x:  1.5, y:  0.5 }
-        ]
-    },
-    {
-        name: "J_type",
-        centers: [
-            { x: -1.5, y: -0.5 },
-            { x: -0.5, y: -0.5 },
-            { x:  0.5, y: -0.5 },
-            { x:  0.5, y:  0.5 }
-        ]
-    },
-    {
-        name: "L_type",
-        centers: [
-            { x: -0.5, y:  0.5 },
-            { x: -0.5, y: -0.5 },
-            { x:  0.5, y: -0.5 },
-            { x:  1.5, y: -0.5 }
-        ]
-    },
-    {
-        name: "O_type",
-        centers: [
-            { x: -0.5, y: -0.5 },
-            { x:  0.5, y: -0.5 },
-            { x:  0.5, y:  0.5 },
-            { x: -0.5, y:  0.5 }
-        ]
-    },
-    {
-        name: "S_type",
-        centers: [
-            { x: -0.5, y:  0.5 },
-            { x:  0.5, y:  0.5 },
-            { x:  0.5, y: -0.5 },
-            { x:  1.5, y: -0.5 }
-        ]
-    },
-    {
-        name: "T_type",
-        centers: [
-            { x: -0.5, y: -0.5 },
-            { x:  0.5, y: -0.5 },
-            { x:  1.5, y: -0.5 },
-            { x:  0.5, y:  0.5 }
-        ]
-    },
-    {
-        name: "T_type",
-        centers: [
-            { x: -0.5, y: -0.5 },
-            { x:  0.5, y: -0.5 },
-            { x:  0.5, y:  0.5 },
-            { x:  1.5, y:  0.5 }
-        ]
-    }
-]
+module.exports = function(colorPalette) {
+    // function classicCololors
+    const types = [
+        {
+            name: "I_type",
+            centers: [
+                { x: -1.5, y:  0.5 },
+                { x: -0.5, y:  0.5 },
+                { x:  0.5, y:  0.5 },
+                { x:  1.5, y:  0.5 }
+            ]
+        },
+        {
+            name: "J_type",
+            centers: [
+                { x: -1.5, y: -0.5 },
+                { x: -0.5, y: -0.5 },
+                { x:  0.5, y: -0.5 },
+                { x:  0.5, y:  0.5 }
+            ]
+        },
+        {
+            name: "L_type",
+            centers: [
+                { x: -0.5, y:  0.5 },
+                { x: -0.5, y: -0.5 },
+                { x:  0.5, y: -0.5 },
+                { x:  1.5, y: -0.5 }
+            ]
+        },
+        {
+            name: "O_type",
+            centers: [
+                { x: -0.5, y: -0.5 },
+                { x:  0.5, y: -0.5 },
+                { x:  0.5, y:  0.5 },
+                { x: -0.5, y:  0.5 }
+            ]
+        },
+        {
+            name: "S_type",
+            centers: [
+                { x: -0.5, y:  0.5 },
+                { x:  0.5, y:  0.5 },
+                { x:  0.5, y: -0.5 },
+                { x:  1.5, y: -0.5 }
+            ]
+        },
+        {
+            name: "T_type",
+            centers: [
+                { x: -0.5, y: -0.5 },
+                { x:  0.5, y: -0.5 },
+                { x:  1.5, y: -0.5 },
+                { x:  0.5, y:  0.5 }
+            ]
+        },
+        {
+            name: "T_type",
+            centers: [
+                { x: -0.5, y: -0.5 },
+                { x:  0.5, y: -0.5 },
+                { x:  0.5, y:  0.5 },
+                { x:  1.5, y:  0.5 }
+            ]
+        }
+    ];
+    if(!colorPalette || colorPalette === 'classic') {
+        return types;
+    }     
+};
 },{}],10:[function(require,module,exports){
 const gameBoard = require('./gameBoard');
 const tetris = require('./tetrisAPI')(gameBoard, render);
@@ -495,8 +506,8 @@ const tetris = require('./tetris');
 const setupGameboard = require('./helpers/setupGameboard');
 
 module.exports = function (gameBoard, callback) {
-    const { width, height, pixel, tempo, stocklength } = gameBoard;
-    const initialState = setupGameboard(width, height, pixel, tempo, stocklength);
+    const { width, height, pixel, tempo, stocklength, tetrominoHeight, colorPalette } = gameBoard;
+    const initialState = setupGameboard(width, height, pixel, tempo, stocklength, tetrominoHeight, colorPalette);
     const onCanvas = initialState;
     let gameIsRunning;
 

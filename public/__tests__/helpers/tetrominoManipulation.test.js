@@ -16,7 +16,7 @@ const {
 } = require('../../scripts/helpers/pointHelpers');
 
 const tetrominoStock = require('../../scripts/helpers/tetrominoStock');
-const I_type = tetrominoStock(1,1).getCurrent()[0].centers;
+const I_type = tetrominoStock(1,1, 'classic').getCurrent()[0].centers;
 
 
 const defaulPIvot = { x: 0, y: 0 };

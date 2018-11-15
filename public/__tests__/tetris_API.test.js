@@ -9,7 +9,9 @@ const gameBoardSetupCheck = {
     height: 20,
     pixel: 10,
     tempo: 1000,
-    stockLength: 3
+    stockLength: 3,
+    tetrominoHeight: 'random',
+    colorPalette: 'classic'
 };
 
 test("Check current default setup", () => {

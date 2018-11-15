@@ -3,9 +3,9 @@ const {
   getRandomArrayItem,
   createAndPopulateArray,
 } = require('./arrayHelpers');
-const tetrominoTypes = require('./tetrominoTypes');
 
-module.exports = function tetrominoStock(length,height) {
+module.exports = function tetrominoStock(length, height, colorPalette) {
+  const tetrominoTypes = require('./tetrominoTypes')(colorPalette);
   let currentStock = height 
     ? createAndPopulateArray(length, () =>_getRandomTetromino(height))
     : createAndPopulateArray(length, _getRandomTetromino);

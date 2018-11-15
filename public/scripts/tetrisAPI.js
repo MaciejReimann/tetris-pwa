@@ -4,8 +4,8 @@ const tetris = require('./tetris');
 const setupGameboard = require('./helpers/setupGameboard');
 
 module.exports = function (gameBoard, callback) {
-    const { width, height, pixel, tempo, stocklength } = gameBoard;
-    const initialState = setupGameboard(width, height, pixel, tempo, stocklength);
+    const { width, height, pixel, tempo, stocklength, tetrominoHeight, colorPalette } = gameBoard;
+    const initialState = setupGameboard(width, height, pixel, tempo, stocklength, tetrominoHeight, colorPalette);
     const onCanvas = initialState;
     let gameIsRunning;
 

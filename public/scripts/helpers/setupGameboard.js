@@ -1,6 +1,6 @@
 const tetrominoStock = require('./tetrominoStock');
 
-module.exports = function setupGameboard(width, height, pixel, tempo, stockLength, tetrominoHeight) {
+module.exports = function setupGameboard(width, height, pixel, tempo, stockLength, tetrominoHeight, colorPalette) {
     return {
         width: width * pixel,
         height: height * pixel,
@@ -11,6 +11,6 @@ module.exports = function setupGameboard(width, height, pixel, tempo, stockLengt
         gameIsOver: false,
 
         // initialize a stock and make it possible to access and mutate its state;
-        stock: tetrominoStock(stockLength, tetrominoHeight),
+        stock: tetrominoStock(stockLength, tetrominoHeight, colorPalette),
     };
 };
