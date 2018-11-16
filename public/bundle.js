@@ -494,12 +494,14 @@ function tetris(prevState, action, callback) {
         nextType, nextAngle, pixel, nextPivot
     );
     // eliminate any full rows on the board;
-    nextSquares = nextSquares.reduce((acc, cur, ind, arr) => {
-        if(arr.filter(p => cur.y === p.y).length < width / pixel) {
-            acc = acc.concat(cur)
-        }
-        return acc;
-    }, []);
+    nextSquares = nextSquares.filter((square, i, arr) => 
+        arr.filter(sq => sq.y === square.y).length < width / pixel)
+    // nextSquares = nextSquares.reduce((acc, cur, ind, arr) => {
+    //     if(arr.filter(p => cur.y === p.y).length < width / pixel) {
+    //         acc = acc.concat(cur)
+    //     }
+    //     return acc;
+    // }, []);
 
     function moveIsAllowed(points) {
         return points.every(point => 
