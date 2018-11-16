@@ -34,10 +34,17 @@ function tetris(prevState, action, callback) {
     } else if(action === 'TURN LEFT') {
         nextAngle -= 90;
     };
-
+    // where the centers would be if any of the above actions is applied;
     nextCenters = getGlobalTetrominoCenters(
         nextType, nextAngle, pixel, nextPivot
     );
+    // eliminate any full rows on the board;
+    nextSquares = nextSquares.reduce((acc, cur, ind, arr) => {
+        if(arr.filter(p => cur.y === p.y).length < width / pixel) {
+            acc = acc.concat(cur)
+        }
+        return acc;
+    }, []);
 
     function moveIsAllowed(points) {
         return points.every(point => 
@@ -73,9 +80,11 @@ function tetris(prevState, action, callback) {
         };
     };
     // Produce fallen squares' vertices in any case;
+
     nextState.squareVertices = [].concat(nextSquares
         .map(center => getParallelSquareVertices(0, center, pixel)
     ));
+
     return Object.assign({}, prevState, nextState);
 };
 
