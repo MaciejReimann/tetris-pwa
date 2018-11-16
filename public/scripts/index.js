@@ -1,6 +1,7 @@
 const gameBoard = require('./gameBoard');
 const tetris = require('./tetrisAPI')(gameBoard, render);
 const {
+    drawRectangularGrid,
     drawSquare,
     clear
 } = require('./helpers/canvasHelpers')
@@ -25,7 +26,8 @@ function render() {
             .map(square => drawSquare(square, CANVAS, square[0].prop.color)
             .fill()
         );
-    };    
+    };
+    drawRectangularGrid(CANVAS, tetris.getState().pixel, "white");
 };
 
 window.addEventListener('keydown', (e) => {
