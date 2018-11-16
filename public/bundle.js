@@ -37,12 +37,20 @@ function flattenArray(array) {
     return [].concat.apply([], array);
 };
 
+function concatIfDoesntInclude(array, newItem) {
+    if(array.every(item => item !== newItem)) {
+        array = array.concat(newItem)
+    };
+    return array;
+};
+
 module.exports = {
     getRandomArrayItem,
     createAndPopulateArray,
     clone,
     carouselArray,
-    flattenArray
+    flattenArray,
+    concatIfDoesntInclude
 }
 },{}],3:[function(require,module,exports){
 
@@ -463,6 +471,10 @@ const {
 } = require('./helpers/pointHelpers');
 
 const {
+    concatIfDoesntInclude
+} = require('./helpers/arrayHelpers');
+
+const {
     getGlobalTetrominoCenters,
     getGlobalTetrominoVertices,
     getParallelSquareVertices
@@ -489,33 +501,61 @@ function tetris(prevState, action, callback) {
     } else if(action === 'TURN LEFT') {
         nextAngle -= 90;
     };
-    // where the centers would be if any of the above actions is applied;
+    // tetromino's square centers if given move is allowed;
     nextCenters = getGlobalTetrominoCenters(
         nextType, nextAngle, pixel, nextPivot
     );
-    // eliminate any full rows on the board;
-    nextSquares = nextSquares.filter((square, i, arr) => 
-        arr.filter(sq => sq.y === square.y).length < width / pixel)
-    // nextSquares = nextSquares.reduce((acc, cur, ind, arr) => {
-    //     if(arr.filter(p => cur.y === p.y).length < width / pixel) {
-    //         acc = acc.concat(cur)
-    //     }
-    //     return acc;
-    // }, []);
 
-    function moveIsAllowed(points) {
-        return points.every(point => 
-            isPointWithinXRange(point, 0, width) &&
-            isPointWithinYRange(point, -pixel, height) &&
-            nextSquares.every(p => !arePointsEqual(p, point))
-        );
+    // filter out full rows and drop the rest down
+    nextSquares = getSquaresFromNotFullRows(nextSquares).map(square =>        
+        movePointOnY(
+            square, 
+            howManyFullRowsBelow(nextSquares, square) * pixel
+        )
+    );
+
+    function getSquaresFromNotFullRows(points) {
+        return points.filter((square, i, arr) => {
+            const row = arr.filter(sq => sq.y === square.y);     
+            return row.length < width / pixel;
+        });
+    };
+
+    function getSquaresFromFullRows(points) {
+        return points.filter((square, i, arr) => {
+            const row = arr.filter(sq => sq.y === square.y);     
+            return row.length >= width / pixel;
+        });
+    };
+
+    function yCoordsOfFullRows(points) {
+        return getSquaresFromFullRows(points).reduce(
+            (acc, cur, idx, arr) => concatIfDoesntInclude(acc, cur.y), [])            
+    };
+
+    function howManyFullRowsBelow(points, point) {
+        return yCoordsOfFullRows(points).filter(
+            rowPoint => rowPoint > point.y
+        ).length;
+    };
+
+    function moveIsAllowed(points, otherPoints) {
+        if(points) {
+            return points.every(point => 
+                isPointWithinXRange(point, 0, width) &&
+                isPointWithinYRange(point, -pixel, height) &&
+                otherPoints.every(p => !arePointsEqual(p, point))
+            );
+        } else {
+            return false
+        }        
     };
     // What happens when tetromino is falling;
-    if(moveIsAllowed(nextCenters)) {
+
+    if(moveIsAllowed(nextCenters, nextSquares)) {
         nextState.type     = nextType;
         nextState.pivot    = nextPivot;
         nextState.angle    = nextAngle;
-        nextState.squares  = nextSquares;
      // Produce falling tetromino's vertices only in this case;
         nextState.tetrominoVertices = getGlobalTetrominoVertices(
             nextType, nextAngle, pixel, nextPivot
@@ -524,29 +564,29 @@ function tetris(prevState, action, callback) {
         if(nextPivot.y === start.y) {
             nextState.gameIsOver = true;
         } else {
-    // What happens when tetromino hits the bottom;
-            nextState.type    = stock.getFirstAndReplenish();
-            nextState.pivot   = start;
-            nextState.angle   = 0;
-            nextState.squares = nextSquares.concat( getGlobalTetrominoCenters(
+            nextSquares = nextSquares.concat( getGlobalTetrominoCenters(
                 prevState.type, 
                 prevState.angle, 
                 pixel, 
                 prevState.pivot 
             ));
+    // What happens when tetromino hits the bottom;
+            nextState.type    = stock.getFirstAndReplenish();
+            nextState.pivot   = start;
+            nextState.angle   = 0;
         };
     };
     // Produce fallen squares' vertices in any case;
-
-    nextState.squareVertices = [].concat(nextSquares
+    nextState.squares = nextSquares;
+    nextState.squareVertices = [].concat(nextState.squares
         .map(center => getParallelSquareVertices(0, center, pixel)
     ));
 
-    return Object.assign({}, prevState, nextState);
+    return Object.assign(prevState, nextState);
 };
 
 module.exports = tetris;
-},{"./helpers/pointHelpers":4,"./helpers/tetrominoManipulation":7}],13:[function(require,module,exports){
+},{"./helpers/arrayHelpers":2,"./helpers/pointHelpers":4,"./helpers/tetrominoManipulation":7}],13:[function(require,module,exports){
 // Function returning object with all tetris actions;
 
 const tetris = require('./tetris');
