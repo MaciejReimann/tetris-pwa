@@ -23,10 +23,18 @@ function flattenArray(array) {
     return [].concat.apply([], array);
 };
 
+function concatIfDoesntInclude(array, newItem) {
+    if(array.every(item => item !== newItem)) {
+        array = array.concat(newItem)
+    };
+    return array;
+};
+
 module.exports = {
     getRandomArrayItem,
     createAndPopulateArray,
     clone,
     carouselArray,
-    flattenArray
+    flattenArray,
+    concatIfDoesntInclude
 }

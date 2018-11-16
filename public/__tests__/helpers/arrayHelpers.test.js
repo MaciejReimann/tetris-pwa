@@ -2,7 +2,8 @@ const {
     getRandomArrayItem,
     createAndPopulateArray,
     carouselArray,
-    flattenArray
+    flattenArray,
+    concatIfDoesntInclude
 } = require('../../scripts/helpers/arrayHelpers');
 
 const decimalNumbers = [0,1,2,3,4,5,6,7,8,9];
@@ -71,3 +72,8 @@ describe("Test carouselArray()", () => {
 test("Flatten an array", () => {
     expect( flattenArray(wrappedDecimal) ).toEqual(decimalNumbers)
 });
+
+test("Concat if doesnt include", () => {
+    expect(concatIfDoesntInclude(decimalNumbers, "a")).toEqual(decimalNumbers.concat("a"));
+    expect(concatIfDoesntInclude(decimalNumbers, 1)).toEqual(decimalNumbers);
+})
