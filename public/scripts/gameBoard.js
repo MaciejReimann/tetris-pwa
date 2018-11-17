@@ -3,7 +3,7 @@
 module.exports = {
     width: 10,
     height: 20,
-    pixel: 10,
+    pixel: 15,
     tempo: 1000,
     stockLength: 3,
     tetrominoHeight: "random",

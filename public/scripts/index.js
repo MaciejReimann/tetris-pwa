@@ -6,10 +6,23 @@ const {
     fill,
     clear
 } = require('./helpers/canvasHelpers')
+
+const tetrisContainer = document.createElement('DIV');
+tetrisContainer.className = 'tetris-container';
+
+const STOCK_CANVAS = document.createElement('CANVAS');
+STOCK_CANVAS.className = 'stock-canvas';
+STOCK_CANVAS.height = tetris.onCanvas.pixel * 5;
+STOCK_CANVAS.width = tetris.onCanvas.width;
+
 const CANVAS = document.createElement('CANVAS');
+CANVAS.className = 'large-canvas';
 CANVAS.height = tetris.onCanvas.height;
 CANVAS.width = tetris.onCanvas.width;
-document.querySelector('body').appendChild(CANVAS);
+
+document.querySelector('body').appendChild(tetrisContainer);
+tetrisContainer.appendChild(STOCK_CANVAS);
+tetrisContainer.appendChild(CANVAS);
 
 function render() {
     const tetromino = tetris.getState().tetrominoVertices;
