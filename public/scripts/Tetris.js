@@ -43,7 +43,7 @@ function tetris(prevState, action, callback) {
         nextType, nextAngle, pixel, nextPivot
     );
 
-    // filter out full rows and drop the rest down
+    // filer out full rows and drop the rest
     nextSquares = getSquaresFromNotFullRows(nextSquares).map(square =>        
         movePointOnY(
             square, 
@@ -57,14 +57,13 @@ function tetris(prevState, action, callback) {
             return row.length < width / pixel;
         });
     };
-
     function getSquaresFromFullRows(points) {
         return points.filter((square, i, arr) => {
             const row = arr.filter(sq => sq.y === square.y);     
             return row.length >= width / pixel;
         });
     };
-
+    
     function yCoordsOfFullRows(points) {
         return getSquaresFromFullRows(points).reduce(
             (acc, cur, idx, arr) => concatIfDoesntInclude(acc, cur.y), [])            
@@ -98,7 +97,7 @@ function tetris(prevState, action, callback) {
             nextType, nextAngle, pixel, nextPivot
         );
     } else if(action === 'MOVE DOWN') {
-        if(nextPivot.y === start.y) {
+        if(nextPivot.y <= 0) {           
             nextState.gameIsOver = true;
         } else {
             nextSquares = nextSquares.concat( getGlobalTetrominoCenters(

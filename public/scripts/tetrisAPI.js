@@ -12,6 +12,10 @@ module.exports = function (gameBoard, callback) {
     let gameState = tetris(initialState);
 
     function isGameRunning() {
+        if(gameState.gameIsOver) {
+            gameIsRunning = false;
+            console.log("Game Over")
+        };
         return gameIsRunning;
     };
     function startGame() {
