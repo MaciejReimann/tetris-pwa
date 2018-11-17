@@ -18,13 +18,14 @@ const {
 } = require('./helpers/tetrominoManipulation');
 
 function tetris(prevState, action, callback) {
-    const { width, height, pixel, start, stock, score } = prevState;
+    const { width, height, pixel, start, stock } = prevState;
     let nextState = {};
     let nextCenters;    
-    let nextType = prevState.type || prevState.stock.getFirstAndReplenish();
+    let nextType = prevState.type || stock.getFirstAndReplenish();
     let nextPivot = prevState.pivot || start;
     let nextAngle = prevState.angle || 0;
     let nextSquares = prevState.squares || [];
+    let nextScore = prevState.score || 0;
 
     // since its pure function, no need for object initialization
     if(action === 'MOVE DOWN') {
@@ -42,8 +43,10 @@ function tetris(prevState, action, callback) {
     nextCenters = getGlobalTetrominoCenters(
         nextType, nextAngle, pixel, nextPivot
     );
+    // inrease score on full rows;
+    nextScore += Math.pow(howManyFullRowsBelow(nextSquares, start), 2) * width / pixel;
 
-    // filer out full rows and drop the rest
+    // filer out full rows and drop the rest;
     nextSquares = getSquaresFromNotFullRows(nextSquares).map(square =>        
         movePointOnY(
             square, 
@@ -112,8 +115,11 @@ function tetris(prevState, action, callback) {
             nextState.angle   = 0;
         };
     };
-    // Produce fallen squares' vertices in any case;
+
+    nextState.score = nextScore;    
     nextState.squares = nextSquares;
+
+    // Produce fallen squares' vertices in any case;
     nextState.squareVertices = [].concat(nextState.squares
         .map(center => getParallelSquareVertices(0, center, pixel)
     ));

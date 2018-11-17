@@ -457,7 +457,7 @@ module.exports = function(colorPalette) {
 };
 },{"./pointHelpers":4,"./tetrominoTypes":9}],11:[function(require,module,exports){
 const gameBoard = require('./gameBoard');
-const tetris = require('./tetrisAPI')(gameBoard, render);
+const tetris = require('./tetrisAPI')(gameBoard, update);
 const {
     drawRectangularGrid,
     drawSquare,
@@ -467,6 +467,9 @@ const {
 
 const tetrisContainer = document.createElement('DIV');
 tetrisContainer.className = 'tetris-container';
+
+const scoreContainer = document.createElement('DIV');
+scoreContainer.className = 'score-container';
 
 const STOCK_CANVAS = document.createElement('CANVAS');
 STOCK_CANVAS.className = 'stock-canvas';
@@ -479,8 +482,18 @@ CANVAS.height = tetris.onCanvas.height;
 CANVAS.width = tetris.onCanvas.width;
 
 document.querySelector('body').appendChild(tetrisContainer);
+tetrisContainer.appendChild(scoreContainer);
 tetrisContainer.appendChild(STOCK_CANVAS);
 tetrisContainer.appendChild(CANVAS);
+
+function score() {
+    scoreContainer.textContent = `SCORE: ${tetris.getState().score}`;
+}
+
+function update() {
+    score();
+    render();
+}
 
 function render() {
     const tetromino = tetris.getState().tetrominoVertices;
@@ -519,7 +532,7 @@ window.addEventListener('keydown', (e) => {
     };
 });
 
-render();
+update();
 
 
 
@@ -549,13 +562,14 @@ const {
 } = require('./helpers/tetrominoManipulation');
 
 function tetris(prevState, action, callback) {
-    const { width, height, pixel, start, stock, score } = prevState;
+    const { width, height, pixel, start, stock } = prevState;
     let nextState = {};
     let nextCenters;    
-    let nextType = prevState.type || prevState.stock.getFirstAndReplenish();
+    let nextType = prevState.type || stock.getFirstAndReplenish();
     let nextPivot = prevState.pivot || start;
     let nextAngle = prevState.angle || 0;
     let nextSquares = prevState.squares || [];
+    let nextScore = prevState.score || 0;
 
     // since its pure function, no need for object initialization
     if(action === 'MOVE DOWN') {
@@ -573,8 +587,10 @@ function tetris(prevState, action, callback) {
     nextCenters = getGlobalTetrominoCenters(
         nextType, nextAngle, pixel, nextPivot
     );
+    // inrease score on full rows;
+    nextScore += Math.pow(howManyFullRowsBelow(nextSquares, start), 2) * width / pixel;
 
-    // filer out full rows and drop the rest
+    // filer out full rows and drop the rest;
     nextSquares = getSquaresFromNotFullRows(nextSquares).map(square =>        
         movePointOnY(
             square, 
@@ -643,8 +659,11 @@ function tetris(prevState, action, callback) {
             nextState.angle   = 0;
         };
     };
-    // Produce fallen squares' vertices in any case;
+
+    nextState.score = nextScore;    
     nextState.squares = nextSquares;
+
+    // Produce fallen squares' vertices in any case;
     nextState.squareVertices = [].concat(nextState.squares
         .map(center => getParallelSquareVertices(0, center, pixel)
     ));

@@ -1,5 +1,5 @@
 const gameBoard = require('./gameBoard');
-const tetris = require('./tetrisAPI')(gameBoard, render);
+const tetris = require('./tetrisAPI')(gameBoard, update);
 const {
     drawRectangularGrid,
     drawSquare,
@@ -9,6 +9,9 @@ const {
 
 const tetrisContainer = document.createElement('DIV');
 tetrisContainer.className = 'tetris-container';
+
+const scoreContainer = document.createElement('DIV');
+scoreContainer.className = 'score-container';
 
 const STOCK_CANVAS = document.createElement('CANVAS');
 STOCK_CANVAS.className = 'stock-canvas';
@@ -21,8 +24,18 @@ CANVAS.height = tetris.onCanvas.height;
 CANVAS.width = tetris.onCanvas.width;
 
 document.querySelector('body').appendChild(tetrisContainer);
+tetrisContainer.appendChild(scoreContainer);
 tetrisContainer.appendChild(STOCK_CANVAS);
 tetrisContainer.appendChild(CANVAS);
+
+function score() {
+    scoreContainer.textContent = `SCORE: ${tetris.getState().score}`;
+}
+
+function update() {
+    score();
+    render();
+}
 
 function render() {
     const tetromino = tetris.getState().tetrominoVertices;
@@ -61,7 +74,7 @@ window.addEventListener('keydown', (e) => {
     };
 });
 
-render();
+update();
 
 
 
