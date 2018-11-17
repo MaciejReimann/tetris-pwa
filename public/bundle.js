@@ -103,6 +103,11 @@ function drawSquare(vertices, canvas, color) {
     return ctx;
 };
 
+function fill(canvas, color) {
+    canvas.getContext('2d').fillStyle = color;
+    canvas.getContext('2d').fillRect(0, 0, canvas.width, canvas.height)
+};
+
 function clear(canvas) {
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -115,6 +120,7 @@ module.exports = {
     drawOffsetHorizontalLines,
     drawRectangularGrid,
     drawSquare,
+    fill,
     clear
 };
 
@@ -238,7 +244,7 @@ module.exports = function setupGameboard(width, height, pixel, tempo, stockLengt
         tempo: tempo,
         start: {x: width * pixel / 2, y: -pixel},
         // a flag changed by nextStep();
-        // gameIsOver: false,
+        gameIsOver: false,
 
         // initialize a stock and make it possible to access and mutate its state;
         stock: tetrominoStock(stockLength, tetrominoHeight, colorPalette),
@@ -455,6 +461,7 @@ const tetris = require('./tetrisAPI')(gameBoard, render);
 const {
     drawRectangularGrid,
     drawSquare,
+    fill,
     clear
 } = require('./helpers/canvasHelpers')
 const CANVAS = document.createElement('CANVAS');
@@ -467,6 +474,7 @@ function render() {
     const squares = tetris.getState().squareVertices;
 
     clear(CANVAS);
+    fill(CANVAS, 'black');
     if(tetromino) {
         tetromino
             .map(square => drawSquare(square, CANVAS, square[0].prop.color)
@@ -496,8 +504,9 @@ window.addEventListener('keydown', (e) => {
     } else if(e.key === 'z' || e.key === 'Z' && tetris.isGameRunning()) {
         tetris.turnLeft();
     };
-    // render();
-})
+});
+
+render();
 
 
 

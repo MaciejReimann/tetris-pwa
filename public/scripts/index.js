@@ -3,6 +3,7 @@ const tetris = require('./tetrisAPI')(gameBoard, render);
 const {
     drawRectangularGrid,
     drawSquare,
+    fill,
     clear
 } = require('./helpers/canvasHelpers')
 const CANVAS = document.createElement('CANVAS');
@@ -15,6 +16,7 @@ function render() {
     const squares = tetris.getState().squareVertices;
 
     clear(CANVAS);
+    fill(CANVAS, 'black');
     if(tetromino) {
         tetromino
             .map(square => drawSquare(square, CANVAS, square[0].prop.color)
@@ -44,8 +46,9 @@ window.addEventListener('keydown', (e) => {
     } else if(e.key === 'z' || e.key === 'Z' && tetris.isGameRunning()) {
         tetris.turnLeft();
     };
-    // render();
-})
+});
+
+render();
 
 
 

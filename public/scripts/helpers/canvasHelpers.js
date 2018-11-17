@@ -48,6 +48,11 @@ function drawSquare(vertices, canvas, color) {
     return ctx;
 };
 
+function fill(canvas, color) {
+    canvas.getContext('2d').fillStyle = color;
+    canvas.getContext('2d').fillRect(0, 0, canvas.width, canvas.height)
+};
+
 function clear(canvas) {
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -60,6 +65,7 @@ module.exports = {
     drawOffsetHorizontalLines,
     drawRectangularGrid,
     drawSquare,
+    fill,
     clear
 };
 
