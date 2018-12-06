@@ -1,15 +1,22 @@
-## Tetris API
-Tetris game engine built to strengthen and showcase my programming skills. 
+# Vanilla Tetris
+Tetris game engine written in functional ES6.
+___
 
-## Motivation
+## Brief:
+Tetris game API with wide backend and frontend configuration possibilities.
 
-A self-assigned programming excercise which main goals were: 
-* to learn the differences between object-oriented and functional code architecture;
-* to design an API with separation of concerns in mind;
-* to practice TDD and procedural programming;
+## Goals:
+A self-assigned programming excercise which main goals were: \
+&nbsp;&nbsp; 1. To learn the differences between object-oriented and functional styles; \
+&nbsp;&nbsp; 2. To design an API with separation of concerns in mind; \
+&nbsp;&nbsp; 3. To practice TDD and procedural programming;
 
-## See live
-Go to: https://vanillatetris.herokuapp.com/ and follow the instructions. 
+## [See live v.1.0.0](https://vanillatetris.herokuapp.com/)
+(This is a MVP... ).
+
+## TODOs:
+~~make game work;~~ \
+* apply some styling;
 
 ## Example Usage
 
