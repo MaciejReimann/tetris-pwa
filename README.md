@@ -26,24 +26,16 @@ Create or import the gameboard configuration object:
 ```javascript
 // The default gameBoard object looks like this:
 const gameBoard = {
-    width: 10,
-    height: 20,
-    pixel: 15,
-    tempo: 1000,
-    stockLength: 3,
-    tetrominoHeight: "random",
-    colorPalette: "classic"
+    pixel: 15, // basic game measurement unit, the assgned value is in actual canvas units
+    width: 10, // gameboard width expressed in game units (pixels) 
+    height: 20, // gameboard height expressed in game units (pixels)
+    tempo: 1000, // tetromino's falling rate, in ms
+    stockLength: 3, // amount of tetrominos in queue
+    tetrominoHeight: "random", // useful for testing purposes only
+    colorPalette: "classic" // to be changed and moved to GUI config file...
 };
 module.exports = gameBoard;
 ```
-**width**\
-**height**\
-**pixel**\
-*tempo**\
-*stockLength**\
-*tetrominoHeight**\
-*colorPalette**\
-
 ```javascript
 // In the tetrisAPI.js file:
 // Import or pass inline the configuration object:
