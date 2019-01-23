@@ -1,7 +1,7 @@
 // Configuration data passed to setupGameboard() in tetris_API;
 
 module.exports = {
-  width: 15,
+  width: 10,
   height: 20,
   pixel: 15,
   tempo: 1000,
