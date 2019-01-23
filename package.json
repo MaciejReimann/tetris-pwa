@@ -1,16 +1,15 @@
 {
-  "name": "tetreeze",
+  "name": "tetris-pwa",
   "version": "1.0.0",
   "description": "A Tetris Clone",
   "engines": {
     "node": "9.10.0"
   },
-  "main": "index.js",
   "scripts": {
-    "start": "node index",
     "test": "jest --watch",
+    "start": "node server",
+    "server": "nodemon server",
     "watch": "watchify src -o public/bundle.js -v",
-    "server": "nodemon index",
     "dev": "concurrently \"npm run server\" \"npm run watch \"",
     "build": "browserify src -o public/bundle.js",
     "publish": "git push heroku master && heroku open"
