@@ -738,4 +738,16 @@ window.addEventListener("keydown", e => {
 
 update();
 
+if (!("serviceWorker" in navigator)) {
+  console.log("Service Worker not supported");
+  return;
+} else {
+  navigator.serviceWorker
+    .register("/service-worker.js")
+    .then(registration => {
+      console.log("SW registered");
+    })
+    .catch(err => console.error(err));
+}
+
 },{"./gameBoard":1,"./helpers/canvasHelpers":3,"./tetrisAPI":12}]},{},[13]);
