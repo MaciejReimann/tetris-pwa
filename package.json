@@ -9,7 +9,7 @@
     "watch": "watchify src -o public/bundle.js -v",
     "server": "nodemon server",
     "dev": "concurrently \"npm run server\" \"npm run watch \"",
-    "build": "cd public && browserify scripts/index.js -o bundle.js",
+    "build": "browserify src -o public/bundle.js",
     "publish": "git push heroku master && heroku open"
   },
   "author": "Maciej Reimann",
