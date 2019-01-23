@@ -4,17 +4,23 @@
   "description": "Tetris Game Engine",
   "main": "index.js",
   "scripts": {
+    "start": "node server",
     "test": "jest --watch",
+    "watch": "watchify src -o public/bundle.js -v",
+    "server": "nodemon server",
+    "dev": "concurrently \"npm run server\" \"npm run watch \"",
     "build": "cd public && browserify scripts/index.js -o bundle.js",
-    "start": "nodemon server.js"
+    "publish": "git push heroku master && heroku open"
   },
   "author": "Maciej Reimann",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "jest": "^23.6.0",
     "nodemon": "^1.18.4"
   },
   "dependencies": {
-    "express": "^4.16.4"
+    "concurrently": "^4.1.0",
+    "express": "^4.16.4",
+    "jest": "^23.6.0"
   }
 }
