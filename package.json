@@ -11,7 +11,7 @@
     "server": "nodemon server",
     "watch": "watchify src -o public/bundle.js -v",
     "dev": "concurrently \"npm run server\" \"npm run watch \"",
-    "build": "browserify src -o public/bundle.js",
+    "build": "browserify src  | uglifyjs -mc warnings=false > public/bundle.js",
     "publish": "git push heroku master && heroku open"
   },
   "cacheDirectories": [
@@ -26,6 +26,7 @@
   "dependencies": {
     "concurrently": "^4.1.0",
     "express": "^4.16.4",
-    "jest": "^23.6.0"
+    "jest": "^23.6.0",
+    "uglify-es": "github:mishoo/UglifyJS2#harmony"
   }
 }
