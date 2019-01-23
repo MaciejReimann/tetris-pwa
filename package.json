@@ -1,17 +1,23 @@
 {
-  "name": "tetris_api",
+  "name": "tetreeze",
   "version": "1.0.0",
-  "description": "Tetris Game Engine",
+  "description": "A Tetris Clone",
+  "engines": {
+    "node": "9.10.0"
+  },
   "main": "index.js",
   "scripts": {
-    "start": "node server",
+    "start": "node index",
     "test": "jest --watch",
     "watch": "watchify src -o public/bundle.js -v",
-    "server": "nodemon server",
+    "server": "nodemon index",
     "dev": "concurrently \"npm run server\" \"npm run watch \"",
     "build": "browserify src -o public/bundle.js",
     "publish": "git push heroku master && heroku open"
   },
+  "cacheDirectories": [
+    "node_modules"
+  ],
   "author": "Maciej Reimann",
   "license": "MIT",
   "devDependencies": {
