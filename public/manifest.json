@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Tetris",
+  "name": "Beautiful Tetris For Mobile",
   "icons": [
     {
       "src": "icons/favicon.svg",

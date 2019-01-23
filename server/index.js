@@ -3,13 +3,19 @@ const fs = require("fs");
 const Koa = require("koa");
 const Router = require("koa-router");
 const cors = require("@koa/cors");
-// const bodyParser = require("koa-bodyparser");
-// const compress = require("koa-compress");
+const bodyParser = require("koa-bodyparser");
+const compress = require("koa-compress");
 const serveStatic = require("koa-static");
 
 const app = new Koa();
 
 app.use(cors());
+app.use(
+  compress({
+    threshold: 4096
+  })
+);
+app.use(bodyParser());
 
 const router = new Router();
 
