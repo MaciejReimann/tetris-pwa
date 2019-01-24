@@ -26,6 +26,7 @@
   "dependencies": {
     "@koa/cors": "^2.2.3",
     "concurrently": "^4.1.0",
+    "http2": "^3.3.7",
     "jest": "^23.6.0",
     "koa": "^2.6.2",
     "koa-bodyparser": "^4.2.1",

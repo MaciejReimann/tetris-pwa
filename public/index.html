@@ -14,6 +14,20 @@
   </head>
   <body>
     <noscript> You need to enable JavaScript to run this app. </noscript>
+
+    <script src="https://www.gstatic.com/firebasejs/5.8.0/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyDzNz8r9Nl4rho4El4G_BtEu6ddKOkZU7g",
+        authDomain: "tetris-pwa.firebaseapp.com",
+        databaseURL: "https://tetris-pwa.firebaseio.com",
+        projectId: "tetris-pwa",
+        storageBucket: "tetris-pwa.appspot.com",
+        messagingSenderId: "454407486749"
+      };
+      firebase.initializeApp(config);
+    </script>
     <script src="bundle.js"></script>
   </body>
 </html>
