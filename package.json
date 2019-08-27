@@ -1,7 +1,7 @@
 {
   "name": "tetris-pwa",
   "author": "Maciej Reimann",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A Tetris Clone",
   "scripts": {
     "test": "echo \"No test specified\"",
