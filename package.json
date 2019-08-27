@@ -1,38 +1,16 @@
 {
   "name": "tetris-pwa",
+  "author": "Maciej Reimann",
   "version": "1.0.0",
   "description": "A Tetris Clone",
-  "engines": {
-    "node": "9.10.0"
-  },
   "scripts": {
-    "test": "jest --watch",
-    "start": "node server",
-    "server": "nodemon server",
-    "watch": "watchify src -o public/bundle.js -v",
-    "dev": "concurrently \"npm run server\" \"npm run watch \"",
-    "build": "browserify src  | uglifyjs -mc warnings=false > public/bundle.js",
-    "publish": "git push heroku master && heroku open"
+    "test": "echo \"No test specified\"",
+    "build": "browserify src  | uglifyjs -mc warnings=false > public/bundle.js"
   },
-  "cacheDirectories": [
-    "node_modules"
-  ],
-  "author": "Maciej Reimann",
-  "license": "MIT",
   "devDependencies": {
     "jest": "^23.6.0",
-    "nodemon": "^1.18.4"
-  },
-  "dependencies": {
-    "@koa/cors": "^2.2.3",
-    "concurrently": "^4.1.0",
-    "http2": "^3.3.7",
-    "jest": "^23.6.0",
-    "koa": "^2.6.2",
-    "koa-bodyparser": "^4.2.1",
-    "koa-compress": "^3.0.0",
-    "koa-router": "^7.4.0",
-    "koa-static": "^5.0.0",
     "uglify-es": "github:mishoo/UglifyJS2#harmony"
-  }
+  },
+  "dependencies": {},
+  "license": "MIT"
 }
