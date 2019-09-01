@@ -1,7 +1,5 @@
-function Tetris() {
-  console.log("hello tetris!");
+export default function Tetris() {
+  return {
+    printHello: () => console.log("hello tetris!")
+  };
 }
-
-module.exports = {
-  Tetris
-};
