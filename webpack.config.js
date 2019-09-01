@@ -2,7 +2,7 @@ module.exports = {
   entry: "./src/index.js",
   output: {
     path: __dirname + "/dist",
-    publicPath: "/",
+    libraryTarget: "commonjs2",
     filename: "index.js"
   },
   resolve: { extensions: ["*", ".js"] },

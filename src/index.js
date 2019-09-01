@@ -1,5 +1,5 @@
-export default function Tetris() {
-  return {
-    printHello: () => console.log("hello tetris!")
-  };
-}
+const Tetris = {
+  printHello: () => console.log("hello tetris!")
+};
+
+export default Tetris;
