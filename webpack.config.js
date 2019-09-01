@@ -2,8 +2,9 @@ module.exports = {
   entry: "./src/index.js",
   output: {
     path: __dirname + "/dist",
-    libraryTarget: "commonjs2",
-    filename: "index.js"
+    filename: "index.js",
+    library: "@maciejreimann/tetris",
+    libraryTarget: "umd"
   },
   resolve: { extensions: ["*", ".js"] },
   module: {
