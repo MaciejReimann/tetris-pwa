@@ -1,7 +1,7 @@
 {
   "name": "@maciejreimann/tetris",
   "author": "Maciej Reimann",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "A Tetris Clone",
   "main": "dist/index.js",
   "scripts": {
