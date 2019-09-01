@@ -4,12 +4,14 @@
   "version": "1.1.1",
   "description": "A Tetris Clone",
   "scripts": {
+    "start": "webpack-dev-server --mode development",
     "test": "echo \"No test specified\"",
     "build": "browserify src  | uglifyjs -mc warnings=false > public/bundle.js"
   },
   "devDependencies": {
-    "jest": "^23.6.0",
-    "uglify-es": "github:mishoo/UglifyJS2#harmony"
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.7",
+    "webpack-dev-server": "^3.8.0"
   },
   "dependencies": {},
   "license": "MIT"
