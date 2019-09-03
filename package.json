@@ -1,5 +1,5 @@
 {
-  "name": "@maciejreimann/tetris",
+  "name": "@maciejreimann/ts-tetris",
   "author": "Maciej Reimann",
   "version": "1.3.0",
   "description": "A Tetris Clone",
