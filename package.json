@@ -7,6 +7,7 @@
   "scripts": {
     "start": "webpack-dev-server --mode development",
     "build": "webpack --config ./webpack.config.js --mode production",
+    "test-watch": "jest --watch",
     "test": "jest"
   },
   "devDependencies": {
@@ -15,6 +16,7 @@
     "@types/jest": "^24.0.18",
     "babel-loader": "^8.0.6",
     "jest": "^24.9.0",
+    "source-map-loader": "^0.2.4",
     "ts-jest": "^24.0.2",
     "typescript": "^3.6.2",
     "webpack": "^4.39.3",
@@ -22,6 +24,7 @@
     "webpack-dev-server": "^3.8.0"
   },
   "dependencies": {
+    "redux": "^4.0.4",
     "ts-loader": "^6.2.0"
   },
   "license": "MIT"
