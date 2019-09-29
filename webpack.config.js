@@ -1,22 +1,33 @@
 module.exports = {
-  entry: "./src/index.js",
+  entry: "./src/index.ts",
   output: {
     path: __dirname + "/dist",
     filename: "index.js",
     library: "@maciejreimann/tetris",
     libraryTarget: "umd"
   },
-  resolve: { extensions: ["*", ".js"] },
+  resolve: {
+    extensions: [".ts", ".js"]
+  },
   module: {
     rules: [
       {
-        test: /\.(js)$/,
+        test: /\.ts?$/,
         exclude: /node_modules/,
-        use: ["babel-loader"]
+        use: [
+          {
+            loader: "ts-loader"
+          }
+        ]
+      },
+      {
+        enforce: "pre",
+        test: /\.js$/,
+        loader: "source-map-loader"
       }
     ]
   },
   devServer: {
     contentBase: "./dist"
   }
-};
+}
