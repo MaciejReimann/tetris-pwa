@@ -1,18 +1,23 @@
-import { defaultConfig, ConfigInterface } from "./defaultConfig"
+import { defaultConfig, TetrisConfigI } from "./defaultConfig"
 
-interface TetrisInterface {
-  gameboard: ConfigInterface
+interface TetrisI {
+  gameboard: any[]
+  config: TetrisConfigI
 }
 
-class TetrisAPI {
+class TetrisAPI implements TetrisI {
   gameboard = []
-  config = {}
-  constructor(config?: ConfigInterface) {
-    this.config = Object.assign(defaultConfig, config)
+  config = defaultConfig
+  constructor(config?) {
+    this.config = Object.assign(this.config, config)
   }
 
   getConfig() {
-    return this.gameboard
+    return this.config
+  }
+
+  moveRight() {
+    console.log("TETRIS moved right")
   }
 }
 

@@ -1,11 +1,11 @@
-export interface ConfigInterface {
-  width: number;
-  height: number;
-  tempo: number;
+export interface CustomConfigI {}
+
+export interface TetrisConfigI {
+  width: number
+  height: number
 }
 
-export const defaultConfig: ConfigInterface = {
+export const defaultConfig: TetrisConfigI = {
   width: 10,
-  height: 15,
-  tempo: 1
-};
+  height: 20
+}
